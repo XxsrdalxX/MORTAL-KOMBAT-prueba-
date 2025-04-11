@@ -9,7 +9,7 @@ public class Kitana extends Personaje {
     }
 
     @Override
-    public void habilidadEspecial() {
+    public void habilidadEspecial(Personaje objetivo) {
         System.out.println(this.nombre + " usa su habilidad especial: ¡Tormenta de abanicos!");
         this.poder += 20; // Aumenta el poder como parte de la habilidad especial
     }

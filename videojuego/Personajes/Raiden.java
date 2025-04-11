@@ -7,12 +7,10 @@ import Videojuego.*;
  * @author Dylan
  */
 public class Raiden extends Personaje {
-    
 
     public Raiden(int vida, int defensa, Estados estado, int poder, String nombre) {
         super(vida, defensa, estado, poder, nombre);
     }
-
 
     public int getVida() {
         return vida;
@@ -53,10 +51,13 @@ public class Raiden extends Personaje {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
     @Override
-    public void habilidadEspecial() {
+    public void habilidadEspecial(Personaje objetivo) {
+        // Implementación de la habilidad especial de Raiden
+
         System.out.println(this.nombre + " usa su habilidad especial: Rayo Destructor!");
         this.poder += 20; // Aumenta el poder como parte de la habilidad especial
     }
-    
+
 }

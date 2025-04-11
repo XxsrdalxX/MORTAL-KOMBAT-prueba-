@@ -1,21 +1,30 @@
 package Personajes;
+
 import java.util.Random;
 import Videojuego.Estados;
+
 public abstract class Personaje {
-    
-    public int vida;
-    public int defensa;
-    public Estados estado;
-    public int poder;
-    public String nombre;
-    
+    public int vidaMaxima;// Vida máxima del personaje
+    public int vida; // Vida actual del personaje
+    public int defensa; // Defensa del personaje
+    public Estados estado; // Estado del personaje (puede ser normal, envenenado, etc.)
+    public int poder; // Poder de ataque del personaje (Se divide entre la defensa del enemigo)
+    public String nombre; // Nombre del personaje
+    public int turnosCongelado;
+    public int turnosEnvenenado; // Turnos que el personaje ha estado envenenado
+    public int turnosQuemado; // Turnos que el personaje ha estado quemado
 
     public Personaje(int vida, int defensa, Estados estado, int poder, String nombre) {
         this.vida = vida;
+        this.vidaMaxima = vida;
         this.defensa = defensa;
         this.estado = estado;
         this.poder = poder;
         this.nombre = nombre;
+    }
+
+    public int getVidaMaxima() {
+        return vidaMaxima;
     }
 
     public int getVida() {
@@ -58,6 +67,9 @@ public abstract class Personaje {
         this.nombre = nombre;
     }
 
+    // Metodo para Atacar a otro personaje
+    // Este método calcula el daño basado en el poder del atacante y la defensa del
+    // objetivo.
     public void atacar(Personaje objetivo) {
         if (objetivo.defensa > 0) {
             int daño = this.poder / objetivo.defensa; // Calcula el daño basado en el poder y la defensa
@@ -65,12 +77,15 @@ public abstract class Personaje {
             if (objetivo.vida < 0) {
                 objetivo.vida = 0; // Asegura que la vida no sea negativa
             }
+            System.out.println("poder : " + poder + " defensa : " + defensa);
+
             System.out.println(this.nombre + " atacó a " + objetivo.nombre + " causando " + daño + " de daño.");
         } else {
             System.out.println("La defensa del objetivo es 0, no se puede calcular el daño.");
         }
     }
-    
+
+    // Método para curar al personaje
     public void curar() {
         Random random = new Random();
         int probabilidad = random.nextInt(100); // Genera un número entre 0 y 99
@@ -81,5 +96,8 @@ public abstract class Personaje {
             System.out.println(this.nombre + " intentó curarse, pero falló.");
         }
     }
-    public abstract void habilidadEspecial();
+
+    // Habilidad especial del personaje (abstracta)
+    // Esta habilidad puede ser diferente para cada personaje.
+    public abstract void habilidadEspecial(Personaje objetivo); // Habilidad especial del personaje
 }

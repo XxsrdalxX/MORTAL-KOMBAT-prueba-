@@ -21,19 +21,19 @@ public class SeleccionPJGUI {
 
         switch (opcion) {
             case 1:
-                personajeSeleccionado = new LiuKang(100, 50, Estados.NORMAL, 30, "Liu Kang");
+                personajeSeleccionado = new LiuKang(100, 5, Estados.NORMAL, 30, "Liu Kang");
                 break;
             case 2:
-                personajeSeleccionado = new Raiden(120, 40, Estados.NORMAL, 25, "Raiden");
+                personajeSeleccionado = new Raiden(120, 5, Estados.NORMAL, 25, "Raiden");
                 break;
             case 3:
-                personajeSeleccionado = new Scorpion("Fuego", 110, 45, Estados.NORMAL, 35, "Scorpion");
+                personajeSeleccionado = new Scorpion("Fuego", 5, 110, Estados.NORMAL, 35, "Scorpion");
                 break;
             case 4:
-                personajeSeleccionado = new SubZero("Hielo", 115, 50, Estados.NORMAL, 28, "Sub-Zero");
+                personajeSeleccionado = new SubZero("Hielo", 5, 115, Estados.NORMAL, 28, "Sub-Zero");
                 break;
             case 5:
-                personajeSeleccionado = new Kitana(90, 40, Estados.NORMAL, 40, "Kitana");
+                personajeSeleccionado = new Kitana(90, 5, Estados.NORMAL, 40, "Kitana");
                 break;
             default:
                 System.out.println("Opción no válida. Selecciona un personaje válido.");

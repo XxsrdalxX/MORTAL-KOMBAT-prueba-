@@ -1,11 +1,14 @@
 
 package Personajes;
-import Videojuego.*;
-public class SubZero extends Personaje{
-    
-    public String tipo;
 
-    public SubZero(String tipo, int vida, int defensa, Estados estado, int poder, String nombre) {
+import Videojuego.*;
+
+public class SubZero extends Personaje {
+
+    public String tipo;
+    public int turnosCongelado = 0; // Variable para contar los turnos congelado
+
+    public SubZero(String tipo, int defensa, int vida, Estados estado, int poder, String nombre) {
         super(vida, defensa, estado, poder, nombre);
         this.tipo = "Hielo";
     }
@@ -28,7 +31,7 @@ public class SubZero extends Personaje{
 
     public int getDefensa() {
         return defensa;
-    }   
+    }
 
     public void setDefensa(int defensa) {
         this.defensa = defensa;
@@ -57,6 +60,23 @@ public class SubZero extends Personaje{
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-   public void habilidadEspecial(){}
-  
+
+    public void Congelar(Personaje objetivo) {
+
+        if (objetivo.getEstado() != Estados.CONGELADO) {
+            System.out.println(this.nombre + " congela a " + objetivo.getNombre() + "!");
+            objetivo.setEstado(Estados.CONGELADO);
+            turnosCongelado++; // Aumenta el contador de turnos congelado
+        } else {
+            System.out.println(objetivo.getNombre() + " ya está congelado por " + turnosCongelado + " turnos!");
+            objetivo.setEstado(Estados.NORMAL);
+        }
+    }
+
+    public void habilidadEspecial(Personaje objetivo) {
+        System.out.println(this.nombre + " usa su habilidad especial: ¡Congelación!");
+        Congelar(objetivo); // Congela al objetivo como parte de la habilidad especial
+
+    }
+
 }
