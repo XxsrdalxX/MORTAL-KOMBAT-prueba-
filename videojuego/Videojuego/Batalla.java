@@ -6,15 +6,19 @@ import java.util.Scanner;
 public class Batalla {
     public void iniciarBatalla(Personaje jugador1, Personaje cpu) {
         Scanner scanner = new Scanner(System.in);
-
+    
         System.out.println("¡Comienza la batalla entre " + jugador1.getNombre() + " y " + cpu.getNombre() + "!");
         System.out.println("========================================");
-
+    
         // Ciclo de turnos
         while (jugador1.getVida() > 0 && cpu.getVida() > 0) {
+            // Manejar estados del jugador y la IA
+            jugador1.manejarEstados();
+            cpu.manejarEstados();
+    
             // Turno del jugador
-            if (jugador1.getEstado() == Estados.CONGELADO) {
-                System.out.println(jugador1.getNombre() + " está congelado y no puede atacar.");
+            if (jugador1.getEstado() == Estados.CONGELADO || jugador1.getEstado() == Estados.PARALIZADO) {
+                System.out.println(jugador1.getNombre() + " está " + jugador1.getEstado().toString().toLowerCase() + " y no puede actuar.");
             } else {
                 System.out.println("\nTurno del jugador:");
                 System.out.println("1. Atacar");
@@ -22,7 +26,7 @@ public class Batalla {
                 System.out.println("3. Usar habilidad especial");
                 System.out.print("Elige una acción: ");
                 int accion = scanner.nextInt();
-
+    
                 switch (accion) {
                     case 1:
                         jugador1.atacar(cpu);
@@ -37,47 +41,32 @@ public class Batalla {
                         System.out.println("Acción no válida. Pierdes tu turno.");
                 }
             }
+    
             // Verificar si la IA ha sido derrotada
             if (cpu.getVida() <= 0) {
                 System.out.println("\n¡" + cpu.getNombre() + " ha sido derrotado! ¡Ganaste!");
-                System.out.println("========================================");
-                System.out.println(" FATALITY ");
-                System.out.println("========================================");
-                System.out.println("DIGITA EL SIGUIENTE CODIGO PARA REALIZAR UNA FATALITY: ");
-                System.out.println("A A B B C C A A B B ");
-                String Codigo = scanner.nextLine();
-                if (Codigo.equals("A A B B C C A A B B")) {
-                    System.out.println("¡Felicidades! Has realizado una FATALITY con éxito.");
-                } else {
-                    System.out.println("Código incorrecto. No has podido realizar la FATALITY.");
-                }
                 break;
             }
-
+    
             // Turno de la IA
-            if (cpu.getEstado() == Estados.CONGELADO) {
-                System.out.println(cpu.getNombre() + " está congelado y no puede atacar.");
+            if (cpu.getEstado() == Estados.CONGELADO || cpu.getEstado() == Estados.PARALIZADO) {
+                System.out.println(cpu.getNombre() + " está " + cpu.getEstado().toString().toLowerCase() + " y no puede actuar.");
             } else {
                 System.out.println("\nTurno de la IA:");
                 IAbot iaBot = new IAbot();
                 iaBot.decidirAccion(cpu, jugador1);
             }
-
+    
             // Verificar si el jugador ha sido derrotado
             if (jugador1.getVida() <= 0) {
                 System.out.println("\n¡" + jugador1.getNombre() + " ha sido derrotado! ¡Perdiste!");
-                System.out.println("¡¡FLAWLESS VICTORY!!");
                 break;
             }
-
-            // Mostrar estado actual de ambos personajes
-            System.out.println("\nEstado actual:");
-            System.out.println(jugador1.getNombre() + " - Vida: " + jugador1.getVida() + ", Defensa: "
-                    + jugador1.getDefensa() + ", Poder: " + jugador1.getPoder());
-            System.out.println(cpu.getNombre() + " - Vida: " + cpu.getVida() + ", Defensa: " + cpu.getDefensa()
-                    + ", Poder: " + cpu.getPoder());
+    
             System.out.println("========================================");
         }
+    
+        scanner.close();
     }
 
 }

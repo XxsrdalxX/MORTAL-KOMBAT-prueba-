@@ -13,6 +13,7 @@ public abstract class Personaje {
     public int turnosCongelado;
     public int turnosEnvenenado; // Turnos que el personaje ha estado envenenado
     public int turnosQuemado; // Turnos que el personaje ha estado quemado
+    public int turnosParalizado; // Turnos que el personaje ha estado paralizado
 
     public Personaje(int vida, int defensa, Estados estado, int poder, String nombre) {
         this.vida = vida;
@@ -96,6 +97,32 @@ public abstract class Personaje {
             System.out.println(this.nombre + " intentó curarse, pero falló.");
         }
     }
+
+    public void manejarEstados() {
+        if (this.estado == Estados.CONGELADO) {
+            if (this.turnosCongelado > 0) {
+                this.turnosCongelado--;
+                System.out.println(this.nombre + " sigue congelado. Turnos restantes: " + this.turnosCongelado);
+            }
+            if (this.turnosCongelado == 0) {
+                this.estado = Estados.NORMAL;
+                System.out.println(this.nombre + " ya no está congelado.");
+            }
+        }
+     
+          if (this.estado == Estados.PARALIZADO) {
+                if (this.turnosParalizado > 0) {
+                    this.turnosParalizado--;
+                    System.out.println(this.nombre + " sigue paralizado. Turnos restantes: " + this.turnosParalizado);
+                }
+                if (this.turnosParalizado == 0) {
+                    this.estado = Estados.NORMAL;
+                    System.out.println(this.nombre + " ya no está paralizado.");
+                }
+            }
+        
+    }
+   
 
     // Habilidad especial del personaje (abstracta)
     // Esta habilidad puede ser diferente para cada personaje.

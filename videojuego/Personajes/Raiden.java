@@ -54,10 +54,15 @@ public class Raiden extends Personaje {
 
     @Override
     public void habilidadEspecial(Personaje objetivo) {
-        // Implementación de la habilidad especial de Raiden
-
-        System.out.println(this.nombre + " usa su habilidad especial: Rayo Destructor!");
-        this.poder += 20; // Aumenta el poder como parte de la habilidad especial
+        if (objetivo.getEstado() != Estados.PARALIZADO) {
+            System.out.println(this.nombre + " usa su habilidad especial: ¡Rayo Destructor!");
+            System.out.println(objetivo.getNombre() + " ha sido paralizado por 1 turno.");
+            objetivo.setEstado(Estados.PARALIZADO); // Paraliza al enemigo
+            objetivo.turnosParalizado = 1; // Paraliza al enemigo por 1 turno
+            this.poder += 10; // Aumenta permanentemente el poder de Raiden
+            System.out.println(this.nombre + " ha aumentado su poder a: " + this.poder);
+        } else {
+            System.out.println(objetivo.getNombre() + " ya está paralizado.");
+        }
     }
-
 }

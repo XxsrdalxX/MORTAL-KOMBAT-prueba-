@@ -1,4 +1,3 @@
-
 package Personajes;
 
 import Videojuego.*;
@@ -6,7 +5,8 @@ import Videojuego.*;
 public class SubZero extends Personaje {
 
     public String tipo;
-    public int turnosCongelado = 0; // Variable para contar los turnos congelado
+    public int turnosCongelado = 0; // Contador de turnos que el objetivo está congelado
+    public int cooldown = 0; // Contador de cooldown para la habilidad especial
 
     public SubZero(String tipo, int defensa, int vida, Estados estado, int poder, String nombre) {
         super(vida, defensa, estado, poder, nombre);
@@ -62,21 +62,30 @@ public class SubZero extends Personaje {
     }
 
     public void Congelar(Personaje objetivo) {
-
         if (objetivo.getEstado() != Estados.CONGELADO) {
             System.out.println(this.nombre + " congela a " + objetivo.getNombre() + "!");
             objetivo.setEstado(Estados.CONGELADO);
-            turnosCongelado++; // Aumenta el contador de turnos congelado
+            objetivo.turnosCongelado = 2; // Congela al objetivo por 2 turnos
         } else {
-            System.out.println(objetivo.getNombre() + " ya está congelado por " + turnosCongelado + " turnos!");
-            objetivo.setEstado(Estados.NORMAL);
+            System.out.println(objetivo.getNombre() + " ya está congelado.");
         }
     }
 
+    @Override
     public void habilidadEspecial(Personaje objetivo) {
-        System.out.println(this.nombre + " usa su habilidad especial: ¡Congelación!");
-        Congelar(objetivo); // Congela al objetivo como parte de la habilidad especial
-
+        if (cooldown == 0) {
+            System.out.println(this.nombre + " usa su habilidad especial: ¡Congelación!");
+            Congelar(objetivo); // Congela al objetivo como parte de la habilidad especial
+            cooldown = 3; // Establece el cooldown en 3 turnos
+        } else {
+            System.out.println(this.nombre + " no puede usar su habilidad especial. Cooldown restante: " + cooldown + " turnos.");
+        }
+        reducirCooldown(); // Reduce el cooldown al final del turno 
     }
 
+    public void reducirCooldown() {
+        if (cooldown > 0) {
+            cooldown--; // Reduce el cooldown en 1 al final del turno
+        }
+    }
 }
