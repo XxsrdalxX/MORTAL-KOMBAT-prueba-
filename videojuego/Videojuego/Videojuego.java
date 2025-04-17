@@ -23,10 +23,10 @@ public class Videojuego {
                 new ModoHistoria(jugador1); // Inicia el modo historia con GUI
                 break;
             case 2:
-                Batalla batalla = new Batalla();
-                IAbot ia = new IAbot();
-                Personaje cpu = ia.seleccionarPersonajeIA();
-                batalla.iniciarBatalla(jugador1, cpu);
+               
+            IAbot ia = new IAbot();
+            Personaje cpu = ia.seleccionarPersonajeIA();
+            new BatallaGUI(jugador1, cpu); // Inicia la batalla con GUI
                 break;
             default:
                 System.out.println("Opción no válida. Saliendo del juego.");
