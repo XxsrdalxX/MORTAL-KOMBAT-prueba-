@@ -145,13 +145,14 @@ public class ModoHistoria extends JFrame {
     // ============================
     private void turnoJugador(String accion) {
         if (jugador.getEstado() != Estados.NORMAL) {
-            String mensaje = "P1: " + jugador.getNombre() + " está " + jugador.getEstado().toString().toLowerCase() + " y no puede actuar.";
+            String mensaje = "P1: " + jugador.getNombre() + " está " + jugador.getEstado().toString().toLowerCase()
+                    + " y no puede actuar.";
             areaMensajes.append(mensaje + "\n");
             jugador.reducirTurnosEstado(); // Reducir el efecto del estado
             turnoEnemigo(); // Pasar el turno al enemigo
             return;
         }
-    
+
         switch (accion) {
             case "atacar":
                 atacar();
@@ -165,7 +166,7 @@ public class ModoHistoria extends JFrame {
             default:
                 throw new IllegalArgumentException("Acción no válida: " + accion);
         }
-    
+
         turnoEnemigo(); // El enemigo actúa después del jugador
     }
 
@@ -182,12 +183,15 @@ public class ModoHistoria extends JFrame {
         areaMensajes.append(mensaje + "\n");
         actualizarInfo();
     }
+
     private void usarHabilidadEspecial() {
         jugador.habilidadEspecial(enemigoActual);
-        String mensaje = "P1: " + jugador.getNombre() + " usó su habilidad especial contra " + enemigoActual.getNombre() + ".";
+        String mensaje = "P1: " + jugador.getNombre() + " usó su habilidad especial contra " + enemigoActual.getNombre()
+                + ".";
         areaMensajes.append(mensaje + "\n");
         verificarEstado();
     }
+
     // ============================
     // Turno del enemigo
     // ============================
@@ -200,8 +204,7 @@ public class ModoHistoria extends JFrame {
         }
 
         if (enemigoActual.getVida() > 0) { // Solo actúa si sigue vivo
-            String accionEnemigo = iaBot.decidirAccion(enemigoActual, jugador, null);
-            areaMensajes.append(accionEnemigo + "\n");
+            String accionEnemigo = iaBot.decidirAccion(enemigoActual, jugador, areaMensajes);
             verificarEstado();
         }
     }
