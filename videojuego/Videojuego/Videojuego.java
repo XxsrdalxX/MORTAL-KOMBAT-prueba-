@@ -26,21 +26,20 @@ public class Videojuego {
         panelBotones.add(btnBatallaRapida);
         ventanaPrincipal.add(panelBotones, BorderLayout.CENTER);
 
-       // Acción para el botón "Modo Historia"
-       btnModoHistoria.addActionListener(e -> {
-        ventanaPrincipal.dispose(); // Cierra la ventana principal
-        SeleccionPJGUI seleccion = new SeleccionPJGUI();
-        seleccion.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosed(java.awt.event.WindowEvent e) {
-                Personaje jugador1 = seleccion.getPersonajeSeleccionado(); // Selección de personaje
-                if (jugador1 != null) {
-                    new ModoHistoria(jugador1); // Inicia el modo historia
+        // Acción para el botón "Modo Historia"
+        btnModoHistoria.addActionListener(e -> {
+            ventanaPrincipal.dispose(); // Cierra la ventana principal
+            SeleccionPJGUI seleccion = new SeleccionPJGUI();
+            seleccion.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent e) {
+                    Personaje jugador1 = seleccion.getPersonajeSeleccionado(); // Selección de personaje
+                    if (jugador1 != null) {
+                        new ModoHistoria(jugador1); // Inicia el modo historia
+                    }
                 }
-            }
+            });
         });
-    });
-
 
         // Acción para el botón "Batalla Rápida"
         btnBatallaRapida.addActionListener(e -> {
@@ -57,5 +56,6 @@ public class Videojuego {
 
         // Mostrar la ventana principal
         ventanaPrincipal.setVisible(true);
+
     }
 }

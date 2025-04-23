@@ -14,6 +14,7 @@ public class ModoHistoria extends JFrame {
     private List<Personaje> enemigos;
     private Personaje enemigoActual;
     private IAbot iaBot; // Instancia de la IA
+    private int contadorTurnos = 0; // Contador de turnos
 
     // Componentes de la interfaz gráfica
     private JTextArea areaMensajes;
@@ -28,9 +29,12 @@ public class ModoHistoria extends JFrame {
         this.enemigos = crearEnemigos();
         this.enemigoActual = enemigos.get(0);
         this.iaBot = new IAbot(); // Inicializa la IA
+        this.contadorTurnos = 0; // Inicializa el contador de turnos
 
         configurarVentana();
         inicializarComponentes();
+        ComboManager comboManager = new ComboManager(areaMensajes, jugador, enemigoActual); // Inicializa el
+                                                                                            // ComboManager
         actualizarInfo(); // Actualiza la información inicial de los personajes
         setVisible(true);
     }
@@ -81,28 +85,35 @@ public class ModoHistoria extends JFrame {
         add(scrollPane, BorderLayout.CENTER);
 
         // Panel inferior: Botones de acción
-        JPanel panelBotones = new JPanel(new GridLayout(1, 4));
+        JPanel panelBotones = new JPanel(new GridLayout(2, 5));
         JButton btnAtacar = new JButton("Atacar");
         JButton btnCurar = new JButton("Curarse");
         JButton btnHabilidad = new JButton("Habilidad Especial");
         JButton btnFatality = new JButton("Fatality");
-
+        JButton btnCombo = new JButton("Combo");// Botón Combo// Botón
+                                                // para combos
+        btnCombo.setEnabled(false); // Deshabilitar el botón Combo al inicio
         btnFatality.setEnabled(false); // Deshabilitar el botón Fatality al inicio
+
         panelBotones.add(btnAtacar);
         panelBotones.add(btnCurar);
         panelBotones.add(btnHabilidad);
         panelBotones.add(btnFatality); // Agregar botón Fatality al panel
+        panelBotones.add(btnCombo); // Agregar botón Combo al panel
+        panelBotones.add(new JButton("Salir")); // Botón de salir (puedes agregar funcionalidad)
         add(panelBotones, BorderLayout.SOUTH);
 
         // Agregar listeners a los botones
-        agregarListeners(btnAtacar, btnCurar, btnHabilidad, btnFatality);
+        agregarListeners(btnAtacar, btnCurar, btnHabilidad, btnFatality, btnCombo);
     }
 
-    private void agregarListeners(JButton btnAtacar, JButton btnCurar, JButton btnHabilidad, JButton btnFatality) {
+    private void agregarListeners(JButton btnAtacar, JButton btnCurar, JButton btnHabilidad, JButton btnFatality,
+            JButton btnCombo) {
         btnAtacar.addActionListener(e -> turnoJugador("atacar"));
         btnCurar.addActionListener(e -> turnoJugador("curar"));
         btnHabilidad.addActionListener(e -> turnoJugador("habilidad"));
         btnFatality.addActionListener(e -> realizarFatality(btnFatality));
+        btnCombo.addActionListener(e -> usarCombo(btnCombo));
     }
 
     // ============================
@@ -143,19 +154,38 @@ public class ModoHistoria extends JFrame {
         }
         // Habilitar o deshabilitar el botón "Fatality"
         JButton btnFatality = (JButton) ((JPanel) getContentPane().getComponent(2)).getComponent(3);
-        btnFatality.setEnabled(enemigoActual.getVida() <= 50);
+        btnFatality.setEnabled(enemigoActual.getVida() <= 30);
 
         actualizarInfo();
     }
 
     private void realizarFatality(JButton btnFatality) {
-        if (enemigoActual.getVida() <= 50) {
+        if (enemigoActual.getVida() <= 30) {
             areaMensajes.append("¡Fatality! " + jugador.getNombre() + " ejecutó un movimiento final contra "
                     + enemigoActual.getNombre() + ".\n");
             enemigoActual.setVida(0); // Elimina al enemigo
             verificarEstado(); // Verifica el estado del juego
             btnFatality.setEnabled(false); // Deshabilita el botón después de usarlo
         }
+
+    }
+
+    private void verificarActivacionCombo() {
+        if (contadorTurnos >= 3) {
+            JButton btnCombo = (JButton) ((JPanel) getContentPane().getComponent(2)).getComponent(4); // Botón Combo
+            btnCombo.setEnabled(true); // Habilitar el botón de combo
+            areaMensajes.append("¡El botón de Combo está ahora disponible!\n");
+        }
+    }
+
+    private void usarCombo(JButton btnCombo) {
+        ComboManager comboManager = new ComboManager(areaMensajes, jugador, enemigoActual);
+        comboManager.mostrarVentanaCombo(); // Llama al método que selecciona un combo aleatorio
+
+        // Deshabilitar el botón de combo y reiniciar el contador de turnos
+        btnCombo.setEnabled(false);
+        contadorTurnos = 0; // Reiniciar el contador de turnos
+        actualizarInfo(); // Actualizar las barras de vida
     }
 
     // ============================
@@ -184,8 +214,10 @@ public class ModoHistoria extends JFrame {
             default:
                 throw new IllegalArgumentException("Acción no válida: " + accion);
         }
-
+        contadorTurnos++; // Incrementar el contador de turnos
+        verificarActivacionCombo(); // Verificar si se puede activar el combo
         turnoEnemigo(); // El enemigo actúa después del jugador
+
     }
 
     private void atacar() {
