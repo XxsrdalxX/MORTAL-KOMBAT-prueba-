@@ -57,7 +57,8 @@ public abstract class Personaje {
             turnosEstado--;
             if (turnosEstado == 0) {
                 estado = Estados.NORMAL; // Vuelve al estado normal
-                JOptionPane.showMessageDialog(null, nombre + " ya no está afectado por ningún estado.", "Estado", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, nombre + " ya no está afectado por ningún estado.", "Estado",
+                        JOptionPane.INFORMATION_MESSAGE);
             }
         }
     }
@@ -66,14 +67,19 @@ public abstract class Personaje {
     public void atacar(Personaje objetivo) {
         int daño = Math.max(0, poder - objetivo.defensa);
         objetivo.setVida(objetivo.getVida() - daño);
-        JOptionPane.showMessageDialog(null, nombre + " atacó a " + objetivo.getNombre() + " causando " + daño + " de daño.", "Ataque", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null,
+                nombre + " atacó a " + objetivo.getNombre() + " causando " + daño + " de daño.", "Ataque",
+                JOptionPane.INFORMATION_MESSAGE);
+
     }
 
     public void curar() {
         int curacion = 20; // Cantidad fija de curación
         setVida(vida + curacion);
-        JOptionPane.showMessageDialog(null, nombre + " se curó " + curacion + " puntos de vida.", "Curación", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, nombre + " se curó " + curacion + " puntos de vida.", "Curación",
+                JOptionPane.INFORMATION_MESSAGE);
     }
-      // Método abstracto para la habilidad especial
-      public abstract void habilidadEspecial(Personaje objetivo);
+
+    // Método abstracto para la habilidad especial
+    public abstract void habilidadEspecial(Personaje objetivo);
 }

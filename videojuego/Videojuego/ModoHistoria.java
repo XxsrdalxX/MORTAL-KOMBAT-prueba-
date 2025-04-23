@@ -81,23 +81,28 @@ public class ModoHistoria extends JFrame {
         add(scrollPane, BorderLayout.CENTER);
 
         // Panel inferior: Botones de acción
-        JPanel panelBotones = new JPanel(new GridLayout(1, 3));
+        JPanel panelBotones = new JPanel(new GridLayout(1, 4));
         JButton btnAtacar = new JButton("Atacar");
         JButton btnCurar = new JButton("Curarse");
         JButton btnHabilidad = new JButton("Habilidad Especial");
+        JButton btnFatality = new JButton("Fatality");
+
+        btnFatality.setEnabled(false); // Deshabilitar el botón Fatality al inicio
         panelBotones.add(btnAtacar);
         panelBotones.add(btnCurar);
         panelBotones.add(btnHabilidad);
+        panelBotones.add(btnFatality); // Agregar botón Fatality al panel
         add(panelBotones, BorderLayout.SOUTH);
 
         // Agregar listeners a los botones
-        agregarListeners(btnAtacar, btnCurar, btnHabilidad);
+        agregarListeners(btnAtacar, btnCurar, btnHabilidad, btnFatality);
     }
 
-    private void agregarListeners(JButton btnAtacar, JButton btnCurar, JButton btnHabilidad) {
+    private void agregarListeners(JButton btnAtacar, JButton btnCurar, JButton btnHabilidad, JButton btnFatality) {
         btnAtacar.addActionListener(e -> turnoJugador("atacar"));
         btnCurar.addActionListener(e -> turnoJugador("curar"));
         btnHabilidad.addActionListener(e -> turnoJugador("habilidad"));
+        btnFatality.addActionListener(e -> realizarFatality(btnFatality));
     }
 
     // ============================
@@ -136,8 +141,21 @@ public class ModoHistoria extends JFrame {
         if (jugador.getVida() <= 0) {
             areaMensajes.append("Has sido derrotado. Fin del modo historia.\n");
         }
+        // Habilitar o deshabilitar el botón "Fatality"
+        JButton btnFatality = (JButton) ((JPanel) getContentPane().getComponent(2)).getComponent(3);
+        btnFatality.setEnabled(enemigoActual.getVida() <= 50);
 
         actualizarInfo();
+    }
+
+    private void realizarFatality(JButton btnFatality) {
+        if (enemigoActual.getVida() <= 50) {
+            areaMensajes.append("¡Fatality! " + jugador.getNombre() + " ejecutó un movimiento final contra "
+                    + enemigoActual.getNombre() + ".\n");
+            enemigoActual.setVida(0); // Elimina al enemigo
+            verificarEstado(); // Verifica el estado del juego
+            btnFatality.setEnabled(false); // Deshabilita el botón después de usarlo
+        }
     }
 
     // ============================
