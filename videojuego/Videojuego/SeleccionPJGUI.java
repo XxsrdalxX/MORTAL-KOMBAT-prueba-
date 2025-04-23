@@ -1,45 +1,57 @@
 package Videojuego;
 
 import Personajes.*;
-import java.util.Scanner;
+import javax.swing.*;
+import java.awt.*;
 
-public class SeleccionPJGUI {
+public class SeleccionPJGUI extends JFrame {
 
-    public static Personaje Seleccion() {
-        Scanner scanner = new Scanner(System.in);
+    private Personaje personajeSeleccionado;
 
-        System.out.println("¡Bienvenido a la selección de personajes!");
-        System.out.println("Por favor, selecciona tu personaje:");
-        System.out.println("1. Liu Kang");
-        System.out.println("2. Raiden");
-        System.out.println("3. Scorpion");
-        System.out.println("4. Sub-Zero");
-        System.out.println("5. Kitana");
+    public SeleccionPJGUI() {
+        setTitle("Selecciona tu personaje");
+        setSize(400, 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Permite cerrar solo esta ventana
+        setLayout(new BorderLayout());
 
-        int opcion = scanner.nextInt();
-        Personaje personajeSeleccionado = null;
+        // Título
+        JLabel titulo = new JLabel("Selecciona tu personaje", SwingConstants.CENTER);
+        titulo.setFont(new Font("Arial", Font.BOLD, 18));
+        add(titulo, BorderLayout.NORTH);
 
-        switch (opcion) {
-            case 1:
-                personajeSeleccionado = new LiuKang(100, 5, Estados.NORMAL, 30, "Liu Kang");
-                break;
-            case 2:
-                personajeSeleccionado = new Raiden(120, 5, Estados.NORMAL, 25, "Raiden");
-                break;
-            case 3:
-                personajeSeleccionado = new Scorpion("Fuego", 5, 110, Estados.NORMAL, 35, "Scorpion");
-                break;
-            case 4:
-                personajeSeleccionado = new SubZero("Hielo", 5, 115, Estados.NORMAL, 28, "Sub-Zero");
-                break;
-            case 5:
-                personajeSeleccionado = new Kitana(90, 5, Estados.NORMAL, 40, "Kitana");
-                break;
-            default:
-                System.out.println("Opción no válida. Selecciona un personaje válido.");
-                break;
-        }
+        // Panel de botones para los personajes
+        JPanel panelPersonajes = new JPanel(new GridLayout(5, 1, 10, 10));
+        JButton btnLiuKang = new JButton("Liu Kang");
+        JButton btnRaiden = new JButton("Raiden");
+        JButton btnScorpion = new JButton("Scorpion");
+        JButton btnSubZero = new JButton("Sub-Zero");
+        JButton btnKitana = new JButton("Kitana");
 
+        panelPersonajes.add(btnLiuKang);
+        panelPersonajes.add(btnRaiden);
+        panelPersonajes.add(btnScorpion);
+        panelPersonajes.add(btnSubZero);
+        panelPersonajes.add(btnKitana);
+        add(panelPersonajes, BorderLayout.CENTER);
+
+        // Listeners para los botones
+        btnLiuKang.addActionListener(e -> seleccionarPersonaje(new LiuKang(100, 5, Estados.NORMAL, 30, "Liu Kang")));
+        btnRaiden.addActionListener(e -> seleccionarPersonaje(new Raiden(120, 5, Estados.NORMAL, 25, "Raiden")));
+        btnScorpion.addActionListener(e -> seleccionarPersonaje(new Scorpion("Fuego", 5, 110, Estados.NORMAL, 35, "Scorpion")));
+        btnSubZero.addActionListener(e -> seleccionarPersonaje(new SubZero("Hielo", 5, 115, Estados.NORMAL, 28, "Sub-Zero")));
+        btnKitana.addActionListener(e -> seleccionarPersonaje(new Kitana(90, 5, Estados.NORMAL, 40, "Kitana")));
+
+        setLocationRelativeTo(null); // Centra la ventana en la pantalla
+        setVisible(true); // Muestra la ventana
+    }
+
+    private void seleccionarPersonaje(Personaje personaje) {
+        personajeSeleccionado = personaje;
+        JOptionPane.showMessageDialog(this, "Has seleccionado a " + personaje.getNombre());
+        dispose(); // Cierra la ventana
+    }
+
+    public Personaje getPersonajeSeleccionado() {
         return personajeSeleccionado;
     }
 }

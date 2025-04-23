@@ -1,37 +1,61 @@
 package Videojuego;
 
 import Personajes.*;
-import java.util.Scanner;
+import javax.swing.*;
+import java.awt.*;
 
 public class Videojuego {
 
     public static void main(String[] args) {
-        System.out.println("¡Bienvenido a Mortal Kombat!");
+        // Crear la ventana principal
+        JFrame ventanaPrincipal = new JFrame("Mortal Kombat");
+        ventanaPrincipal.setSize(400, 300);
+        ventanaPrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ventanaPrincipal.setLayout(new BorderLayout());
+
+        // Título del juego
+        JLabel titulo = new JLabel("¡Bienvenido a Mortal Kombat!", SwingConstants.CENTER);
+        titulo.setFont(new Font("Arial", Font.BOLD, 20));
+        ventanaPrincipal.add(titulo, BorderLayout.NORTH);
+
+        // Panel de botones para seleccionar el modo de juego
+        JPanel panelBotones = new JPanel(new GridLayout(2, 1, 10, 10));
+        JButton btnModoHistoria = new JButton("Modo Historia (Torres)");
+        JButton btnBatallaRapida = new JButton("Batalla Rápida");
+        panelBotones.add(btnModoHistoria);
+        panelBotones.add(btnBatallaRapida);
+        ventanaPrincipal.add(panelBotones, BorderLayout.CENTER);
+
+       // Acción para el botón "Modo Historia"
+       btnModoHistoria.addActionListener(e -> {
+        ventanaPrincipal.dispose(); // Cierra la ventana principal
         SeleccionPJGUI seleccion = new SeleccionPJGUI();
-        Personaje jugador1 = seleccion.Seleccion();
-        
+        seleccion.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                Personaje jugador1 = seleccion.getPersonajeSeleccionado(); // Selección de personaje
+                if (jugador1 != null) {
+                    new ModoHistoria(jugador1); // Inicia el modo historia
+                }
+            }
+        });
+    });
 
-        System.out.println("\nSelecciona un modo de juego:");
-        System.out.println("1. Modo Historia (Torres)");
-        System.out.println("2. Batalla Rápida");
-        System.out.print("Elige una opción: ");
-        Scanner scanner = new Scanner(System.in);
-        int opcion = scanner.nextInt();
 
-        switch (opcion) {
-            case 1:
-                new ModoHistoria(jugador1); // Inicia el modo historia con GUI
-                break;
-            case 2:
-               
+        // Acción para el botón "Batalla Rápida"
+        btnBatallaRapida.addActionListener(e -> {
+            ventanaPrincipal.dispose(); // Cierra la ventana principal
+            SeleccionPJGUI seleccion = new SeleccionPJGUI();
+            while (seleccion.getPersonajeSeleccionado() == null) {
+                // Espera a que el jugador seleccione un personaje
+            }
+            Personaje jugador1 = seleccion.getPersonajeSeleccionado(); // Selección de personaje
             IAbot ia = new IAbot();
-            Personaje cpu = ia.seleccionarPersonajeIA();
-            new BatallaGUI(jugador1, cpu); // Inicia la batalla con GUI
-                break;
-            default:
-                System.out.println("Opción no válida. Saliendo del juego.");
-        }
+            Personaje cpu = ia.seleccionarPersonajeIA(); // Selección del enemigo
+            new BatallaGUI(jugador1, cpu); // Inicia la batalla rápida
+        });
 
-        scanner.close();
+        // Mostrar la ventana principal
+        ventanaPrincipal.setVisible(true);
     }
 }

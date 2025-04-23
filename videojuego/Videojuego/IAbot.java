@@ -1,61 +1,69 @@
-
 package Videojuego;
 
 import java.util.Random;
+import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 
 import Personajes.*;
 
 public class IAbot {
 
-    public void decidirAccion(Personaje enemigo, Personaje jugador) {
-        // Si el jugador está congelado, la IA no usa su habilidad
-        if (jugador.estado == Estados.CONGELADO) {
-            System.out.println(" La IA ve que " + jugador.nombre + " está congelado. Ataca normalmente.");
-            enemigo.atacar(jugador);
-            return;
-        }
-
-        // Si la IA está en peligro, puede intentar curarse
-        if (enemigo.vida <= 20) {
-            System.out.println(enemigo.nombre + " está en peligro. Intenta curarse.");
-            enemigo.curar();
-            return;
-        }
-
-        // Probabilidad de usar habilidad especial (60% de las veces)
-        if (Math.random() < 0.6) {
-            System.out.println(enemigo.nombre + " decide usar su habilidad especial.");
-            enemigo.habilidadEspecial(jugador);
-        } else {
-            System.out.println(enemigo.nombre + " ataca normalmente.");
-            enemigo.atacar(jugador);
+    
+    public Personaje seleccionarPersonajeIA() {
+        Random random = new Random();
+        int opcion = random.nextInt(5); // Genera un número aleatorio entre 0 y 4
+    
+        switch (opcion) {
+            case 0:
+                return new Raiden(100, 10, Estados.NORMAL, 15, "Raiden");
+            case 1:
+                return new LiuKang(120, 8, Estados.NORMAL, 20, "Liu Kang");
+            case 2:
+                return new SubZero("Hielo", 110, 12, Estados.NORMAL, 25, "Sub-Zero");
+            case 3:
+                return new Kitana(90, 9, Estados.NORMAL, 18, "Kitana");
+            case 4:
+                return new Scorpion("Fuego", 100, 11, Estados.NORMAL, 22, "Scorpion");
+            default:
+                return new Raiden(100, 10, Estados.NORMAL, 15, "Raiden"); // Caso por defecto
         }
     }
+   public String decidirAccion(Personaje enemigo, Personaje jugador, JTextArea areaMensajes) {
+    String mensaje;
 
-    public static Personaje seleccionarPersonajeIA() {
-        Random random = new Random();
-        int opcion = random.nextInt(5) + 1; // Genera un número aleatorio entre 1 y 5
+    // Verificar si el enemigo está congelado
+    if (enemigo.getEstado() == Estados.CONGELADO) {
+        mensaje = "CPU: " + enemigo.getNombre() + " está congelado y no puede realizar ninguna acción.";
+        areaMensajes.append(mensaje + "\n");
+        enemigo.reducirTurnosEstado(); // Reducir el efecto de congelación
+        return mensaje;
+    }
 
-        switch (opcion) {
-            case 1:
-                System.out.println("🤖 La IA ha seleccionado a Liu Kang.");
-                return new LiuKang(100, 5, Estados.NORMAL, 30, "Liu Kang");
-            case 2:
-                System.out.println("🤖 La IA ha seleccionado a Raiden.");
-                return new Raiden(120, 4, Estados.NORMAL, 25, "Raiden");
-            case 3:
-                System.out.println("🤖 La IA ha seleccionado a Scorpion.");
-                return new Scorpion("Fuego", 4, 110, Estados.NORMAL, 35, "Scorpion");
-            case 4:
-                System.out.println("🤖 La IA ha seleccionado a Sub-Zero.");
-                return new SubZero("Hielo", 5, 115, Estados.NORMAL, 28, "Sub-Zero");
-            case 5:
-                System.out.println("🤖 La IA ha seleccionado a Kitana.");
-                return new Kitana(90, 4, Estados.NORMAL, 40, "Kitana");
-            default:
-                // Esto nunca debería ocurrir, pero se incluye por seguridad
-                System.out.println("🤖 Error al seleccionar personaje de la IA.");
-                return null;
-        }
+    // Si la IA está en peligro, puede intentar curarse
+    if (enemigo.getVida() <= 20) {
+        enemigo.curar();
+        mensaje = "CPU: " + enemigo.getNombre() + " se curó.";
+        areaMensajes.append(mensaje + "\n");
+        return mensaje;
+    }
+
+    // Decidir si usar la habilidad especial (40% de probabilidad)
+    if (Math.random() < 0.4 && enemigo.getEstado() == Estados.NORMAL) {
+        enemigo.habilidadEspecial(jugador);
+        mensaje = "CPU: " + enemigo.getNombre() + " usó su habilidad especial contra " + jugador.getNombre() + ".";
+        areaMensajes.append(mensaje + "\n");
+        return mensaje;
+    }
+
+    // Si no se cumplen las condiciones anteriores, atacar
+    enemigo.atacar(jugador);
+    mensaje = "CPU: " + enemigo.getNombre() + " atacó a " + jugador.getNombre() + ".";
+    areaMensajes.append(mensaje + "\n");
+    return mensaje;
+}
+
+    private void mostrarMensaje(String mensaje) {
+        // Muestra el mensaje en una ventana emergente
+        JOptionPane.showMessageDialog(null, mensaje, "Acción de la IA", JOptionPane.INFORMATION_MESSAGE);
     }
 }
