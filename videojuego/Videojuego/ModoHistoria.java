@@ -1,16 +1,18 @@
 package Videojuego;
 
 import Personajes.*;
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import javax.swing.*;
 
 public class ModoHistoria extends JFrame {
     // ============================
     // Atributos principales
     // ============================
     private Personaje jugador;
+    private HashMap<String, Runnable> fatalitys; // Almacena los fatalitys y sus efectos
     private List<Personaje> enemigos;
     private Personaje enemigoActual;
     private IAbot iaBot; // Instancia de la IA
@@ -161,13 +163,36 @@ public class ModoHistoria extends JFrame {
 
     private void realizarFatality(JButton btnFatality) {
         if (enemigoActual.getVida() <= 30) {
-            areaMensajes.append("¡Fatality! " + jugador.getNombre() + " ejecutó un movimiento final contra "
-                    + enemigoActual.getNombre() + ".\n");
-            enemigoActual.setVida(0); // Elimina al enemigo
-            verificarEstado(); // Verifica el estado del juego
-            btnFatality.setEnabled(false); // Deshabilita el botón después de usarlo
+            // Inicializar el mapa de fatalitys si no está inicializado
+            if (fatalitys == null) {
+                fatalitys = new HashMap<>();
+                fatalitys.put("QWEERWWQ", () -> {
+                    areaMensajes.append("¡Fatality!\n");
+                    enemigoActual.setVida(0); // Matar al enemigo
+                    areaMensajes.append("Has realizado un Fatality a " + enemigoActual.getNombre() + ".\n");
+                    verificarEstado(); // Verificar si el enemigo ha sido derrotado
+                });
+            }
+    
+            // Mostrar la secuencia requerida al jugador
+            String secuenciaRequerida = "QWEERWWQ"; // Puedes cambiar esta secuencia según sea necesario
+            String mensaje = "Para realizar el Fatality, ingresa la siguiente secuencia:\n" + secuenciaRequerida;
+    
+            // Solicitar la secuencia al jugador
+            String secuenciaIngresada = JOptionPane.showInputDialog(this, 
+                mensaje, 
+                "Realizar Fatality", 
+                JOptionPane.PLAIN_MESSAGE);
+    
+            // Validar la secuencia ingresada
+            if (secuenciaIngresada != null && fatalitys.containsKey(secuenciaIngresada)) {
+                fatalitys.get(secuenciaIngresada).run(); // Ejecutar el Fatality
+            } else {
+                areaMensajes.append("Secuencia incorrecta. No se pudo realizar el Fatality.\n");
+            }
+        } else {
+            areaMensajes.append("El enemigo tiene demasiada vida para realizar un Fatality.\n");
         }
-
     }
 
     private void verificarActivacionCombo() {
@@ -186,6 +211,7 @@ public class ModoHistoria extends JFrame {
         btnCombo.setEnabled(false);
         contadorTurnos = 0; // Reiniciar el contador de turnos
         actualizarInfo(); // Actualizar las barras de vida
+        verificarEstado(); 
     }
 
     // ============================
