@@ -1,6 +1,7 @@
 package Personajes;
 
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 
 import Videojuego.*;
 
@@ -15,7 +16,7 @@ public class LiuKang extends Personaje {
     }
 
     @Override
-    public void habilidadEspecial(Personaje objetivo) {
+    public void habilidadEspecial(Personaje objetivo, JTextArea areaMensajes) {
         // Mostrar mensaje de uso de habilidad especial
         String mensajeHabilidad = this.nombre + " usa su habilidad especial: ¡Patada Voladora!";
         mostrarMensaje(mensajeHabilidad);
@@ -24,7 +25,8 @@ public class LiuKang extends Personaje {
         objetivo.setVida(objetivo.getVida() - this.poder);
 
         // Mostrar mensaje de daño infligido
-        String mensajeDaño = objetivo.getNombre() + " ha recibido " + this.poder + " de daño. Vida restante: " + objetivo.getVida();
+        String mensajeDaño = objetivo.getNombre() + " ha recibido " + this.poder + " de daño. Vida restante: "
+                + objetivo.getVida();
         mostrarMensaje(mensajeDaño);
 
         // Aumentar el poder de Liu Kang
@@ -35,7 +37,7 @@ public class LiuKang extends Personaje {
         mostrarMensaje(mensajePoder);
     }
 
-     private void mostrarMensaje(String mensaje) {
+    private void mostrarMensaje(String mensaje) {
         // Muestra el mensaje en una ventana emergente
         JOptionPane.showMessageDialog(null, mensaje, "Habilidad Especial de Liu Kang", JOptionPane.INFORMATION_MESSAGE);
     }

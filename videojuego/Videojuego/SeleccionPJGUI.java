@@ -35,11 +35,13 @@ public class SeleccionPJGUI extends JFrame {
         add(panelPersonajes, BorderLayout.CENTER);
 
         // Listeners para los botones
-        btnLiuKang.addActionListener(e -> seleccionarPersonaje(new LiuKang(100, 5, Estados.NORMAL, 30, "Liu Kang")));
-        btnRaiden.addActionListener(e -> seleccionarPersonaje(new Raiden(120, 5, Estados.NORMAL, 25, "Raiden")));
-        btnScorpion.addActionListener(e -> seleccionarPersonaje(new Scorpion("Fuego", 5, 110, Estados.NORMAL, 35, "Scorpion")));
-        btnSubZero.addActionListener(e -> seleccionarPersonaje(new SubZero("Hielo", 5, 115, Estados.NORMAL, 28, "Sub-Zero")));
-        btnKitana.addActionListener(e -> seleccionarPersonaje(new Kitana(90, 5, Estados.NORMAL, 40, "Kitana")));
+        btnLiuKang.addActionListener(e -> seleccionarPersonaje(new LiuKang(100, 5, Estados.NORMAL, 20, "Liu Kang")));
+        btnRaiden.addActionListener(e -> seleccionarPersonaje(new Raiden(100, 5, Estados.NORMAL, 35, "Raiden")));
+        btnScorpion.addActionListener(
+                e -> seleccionarPersonaje(new Scorpion("Fuego", 5, 100, Estados.NORMAL, 35, "Scorpion")));
+        btnSubZero.addActionListener(
+                e -> seleccionarPersonaje(new SubZero("Hielo", 100, 5, Estados.NORMAL, 35, "Sub-Zero")));
+        btnKitana.addActionListener(e -> seleccionarPersonaje(new Kitana(90, 5, Estados.NORMAL, 20, "Kitana")));
 
         setLocationRelativeTo(null); // Centra la ventana en la pantalla
         setVisible(true); // Muestra la ventana

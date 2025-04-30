@@ -23,9 +23,9 @@ public class ComboManager {
     // Inicializa los combos disponibles
     private void inicializarCombos() {
         combos = new HashMap<>();
-        combos.put("WASD", () -> realizarCombo("Combo de Ataque Rápido", 50));
-        combos.put("QWE", () -> realizarCombo("Combo de Habilidad Especial", 100));
-        combos.put("ASD", () -> realizarCombo("Combo de Curación", -30)); // Curación
+        combos.put("WASDBBCEWWA", () -> realizarCombo("Combo de Ataque Rápido", 50));
+        combos.put("QWEYUUUWSKD", () -> realizarCombo("Combo de Habilidad Especial", 100));
+        combos.put("ASDDLLSÑÑEP", () -> realizarCombo("Combo de Curación", -30)); // Curación
     }
 
     // Muestra una ventana para que el usuario ingrese un combo
@@ -40,13 +40,13 @@ public class ComboManager {
 
         // Etiqueta con instrucciones
         JLabel labelInstrucciones = new JLabel("Ingresa el combo: " + comboEsperado, SwingConstants.CENTER);
-        labelInstrucciones.setFont(new Font("Arial", Font.BOLD, 64)); // Cambiar tamaño del texto
+        labelInstrucciones.setFont(new Font("Arial", Font.BOLD, 44)); // Cambiar tamaño del texto
         dialogoCombo.add(labelInstrucciones, BorderLayout.NORTH);
 
         // Campo de texto para ingresar el combo
         JTextField campoCombo = new JTextField();
         campoCombo.setHorizontalAlignment(JTextField.CENTER); // Centrar el texto ingresado
-        campoCombo.setFont(new Font("Arial", Font.BOLD, 64)); // Cambiar tamaño del texto ingresado
+        campoCombo.setFont(new Font("Arial", Font.BOLD, 44)); // Cambiar tamaño del texto ingresado
         dialogoCombo.add(campoCombo, BorderLayout.CENTER);
 
         // Panel inferior con temporizador y botón confirmar
@@ -54,7 +54,7 @@ public class ComboManager {
 
         // Etiqueta para mostrar el tiempo restante
         JLabel labelTemporizador = new JLabel("Tiempo restante: 10 segundos", SwingConstants.CENTER);
-        labelTemporizador.setFont(new Font("Arial", Font.BOLD, 48));
+        labelTemporizador.setFont(new Font("Arial", Font.BOLD, 44));
         panelInferior.add(labelTemporizador, BorderLayout.NORTH);
 
         // Botón para confirmar el combo

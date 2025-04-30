@@ -8,11 +8,10 @@ import Personajes.*;
 
 public class IAbot {
 
-    
     public Personaje seleccionarPersonajeIA() {
         Random random = new Random();
         int opcion = random.nextInt(5); // Genera un número aleatorio entre 0 y 4
-    
+
         switch (opcion) {
             case 0:
                 return new Raiden(100, 10, Estados.NORMAL, 15, "Raiden");
@@ -28,42 +27,45 @@ public class IAbot {
                 return new Raiden(100, 10, Estados.NORMAL, 15, "Raiden"); // Caso por defecto
         }
     }
-   public String decidirAccion(Personaje enemigo, Personaje jugador, JTextArea areaMensajes) {
-    String mensaje;
 
-    // Verificar si el enemigo está congelado
-    if (enemigo.getEstado() == Estados.CONGELADO) {
-        mensaje = "CPU: " + enemigo.getNombre() + " está congelado y no puede realizar ninguna acción.";
+    public String decidirAccion(Personaje enemigo, Personaje jugador, JTextArea areaMensajes) {
+        String mensaje;
+
+        // Verificar si el enemigo está congelado
+        if (enemigo.getEstado() == Estados.CONGELADO) {
+            mensaje = "CPU: " + enemigo.getNombre() + " está congelado y no puede realizar ninguna acción.";
+            areaMensajes.append(mensaje + "\n");
+            enemigo.reducirTurnosEstado(); // Reducir el efecto de congelación
+            return mensaje;
+        }
+
+        // Si la IA está en peligro, puede intentar curarse
+        if (enemigo.getVida() <= 30) {
+            enemigo.curar();
+            mensaje = "CPU: " + enemigo.getNombre() + " se curó.";
+            areaMensajes.append(mensaje + "\n");
+            return mensaje;
+        }
+
+        // Decidir si usar la habilidad especial (40% de probabilidad)
+        if (Math.random() < 0.4 && enemigo.getEstado() == Estados.NORMAL && jugador.getTurnosEstado() == 0) {
+            // Verificar si la habilidad especial está disponible
+            enemigo.habilidadEspecial(jugador, areaMensajes);
+            mensaje = "CPU: " + enemigo.getNombre() + " usó su habilidad especial contra " + jugador.getNombre() + ".";
+            areaMensajes.append(mensaje + "\n");
+            return mensaje;
+        }
+
+        // Si no se cumplen las condiciones anteriores, atacar
+        enemigo.atacar(jugador);
+        mensaje = "CPU: " + enemigo.getNombre() + " atacó a " + jugador.getNombre() + ".";
         areaMensajes.append(mensaje + "\n");
-        enemigo.reducirTurnosEstado(); // Reducir el efecto de congelación
         return mensaje;
     }
-
-    // Si la IA está en peligro, puede intentar curarse
-    if (enemigo.getVida() <= 20) {
-        enemigo.curar();
-        mensaje = "CPU: " + enemigo.getNombre() + " se curó.";
-        areaMensajes.append(mensaje + "\n");
-        return mensaje;
-    }
-
-    // Decidir si usar la habilidad especial (40% de probabilidad)
-    if (Math.random() < 0.4 && enemigo.getEstado() == Estados.NORMAL) {
-        enemigo.habilidadEspecial(jugador);
-        mensaje = "CPU: " + enemigo.getNombre() + " usó su habilidad especial contra " + jugador.getNombre() + ".";
-        areaMensajes.append(mensaje + "\n");
-        return mensaje;
-    }
-
-    // Si no se cumplen las condiciones anteriores, atacar
-    enemigo.atacar(jugador);
-    mensaje = "CPU: " + enemigo.getNombre() + " atacó a " + jugador.getNombre() + ".";
-    areaMensajes.append(mensaje + "\n");
-    return mensaje;
-}
 
     private void mostrarMensaje(String mensaje) {
         // Muestra el mensaje en una ventana emergente
         JOptionPane.showMessageDialog(null, mensaje, "Acción de la IA", JOptionPane.INFORMATION_MESSAGE);
     }
+
 }

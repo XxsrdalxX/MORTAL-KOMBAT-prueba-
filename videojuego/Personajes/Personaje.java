@@ -3,6 +3,7 @@ package Personajes;
 import java.util.Random;
 
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 
 import Videojuego.Estados;
 
@@ -26,6 +27,10 @@ public abstract class Personaje {
     }
 
     // Getters y setters
+    public int getTurnosEstado() {
+        return turnosEstado;
+    }
+
     public Estados getEstado() {
         return estado;
     }
@@ -81,5 +86,5 @@ public abstract class Personaje {
     }
 
     // Método abstracto para la habilidad especial
-    public abstract void habilidadEspecial(Personaje objetivo);
+    public abstract void habilidadEspecial(Personaje objetivo, JTextArea areaMensajes);
 }

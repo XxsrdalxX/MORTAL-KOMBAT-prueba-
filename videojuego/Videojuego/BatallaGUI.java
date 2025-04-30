@@ -87,7 +87,7 @@ public class BatallaGUI extends JFrame {
     }
 
     private void usarHabilidadEspecial() {
-        jugador.habilidadEspecial(enemigo);
+        jugador.habilidadEspecial(enemigo, areaMensajes);
         areaMensajes.append(jugador.getNombre() + " usó su habilidad especial contra " + enemigo.getNombre() + "\n");
         actualizarBarrasDeVida();
         verificarEstado();

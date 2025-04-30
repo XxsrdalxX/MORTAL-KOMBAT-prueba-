@@ -173,17 +173,17 @@ public class ModoHistoria extends JFrame {
                     verificarEstado(); // Verificar si el enemigo ha sido derrotado
                 });
             }
-    
+
             // Mostrar la secuencia requerida al jugador
             String secuenciaRequerida = "QWEERWWQ"; // Puedes cambiar esta secuencia según sea necesario
             String mensaje = "Para realizar el Fatality, ingresa la siguiente secuencia:\n" + secuenciaRequerida;
-    
+
             // Solicitar la secuencia al jugador
-            String secuenciaIngresada = JOptionPane.showInputDialog(this, 
-                mensaje, 
-                "Realizar Fatality", 
-                JOptionPane.PLAIN_MESSAGE);
-    
+            String secuenciaIngresada = JOptionPane.showInputDialog(this,
+                    mensaje,
+                    "Realizar Fatality",
+                    JOptionPane.PLAIN_MESSAGE);
+
             // Validar la secuencia ingresada
             if (secuenciaIngresada != null && fatalitys.containsKey(secuenciaIngresada)) {
                 fatalitys.get(secuenciaIngresada).run(); // Ejecutar el Fatality
@@ -211,7 +211,7 @@ public class ModoHistoria extends JFrame {
         btnCombo.setEnabled(false);
         contadorTurnos = 0; // Reiniciar el contador de turnos
         actualizarInfo(); // Actualizar las barras de vida
-        verificarEstado(); 
+        verificarEstado();
     }
 
     // ============================
@@ -261,7 +261,7 @@ public class ModoHistoria extends JFrame {
     }
 
     private void usarHabilidadEspecial() {
-        jugador.habilidadEspecial(enemigoActual);
+        jugador.habilidadEspecial(enemigoActual, areaMensajes); // Pasar el área de mensajes
         String mensaje = "P1: " + jugador.getNombre() + " usó su habilidad especial contra " + enemigoActual.getNombre()
                 + ".";
         areaMensajes.append(mensaje + "\n");
