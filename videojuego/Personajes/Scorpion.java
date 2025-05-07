@@ -53,7 +53,12 @@ public class Scorpion extends Personaje {
 
     @Override
     public void habilidadEspecial(Personaje objetivo, JTextArea areaMensajes) {
-        areaMensajes.append(this.nombre + " usa LANZA INFERNAL\n");
-        this.Quemar(objetivo, areaMensajes);
+        // Registrar el uso de la habilidad especial
+        String mensaje = nombre + " usa su habilidad especial: ¡Lanza Infernal!";
+        areaMensajes.append(mensaje + "\n");
+    
+        // Aplicar el efecto de quemadura
+        Quemar(objetivo, areaMensajes);
     }
-}
+
+    }

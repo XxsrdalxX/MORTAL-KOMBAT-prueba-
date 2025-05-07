@@ -17,24 +17,24 @@ public class LiuKang extends Personaje {
 
     @Override
     public void habilidadEspecial(Personaje objetivo, JTextArea areaMensajes) {
-        // Mostrar mensaje de uso de habilidad especial
-        String mensajeHabilidad = this.nombre + " usa su habilidad especial: ¡Patada Voladora!";
-        mostrarMensaje(mensajeHabilidad);
-
+        // Registrar el uso de la habilidad especial
+        String mensajeHabilidad = nombre + " usa su habilidad especial: ¡Patada Voladora!";
+        areaMensajes.append(mensajeHabilidad + "\n");
+    
         // Reducir la vida del objetivo
-        objetivo.setVida(objetivo.getVida() - this.poder);
-
-        // Mostrar mensaje de daño infligido
-        String mensajeDaño = objetivo.getNombre() + " ha recibido " + this.poder + " de daño. Vida restante: "
-                + objetivo.getVida();
-        mostrarMensaje(mensajeDaño);
-
+        int daño = this.poder;
+        objetivo.setVida(objetivo.getVida() - daño);
+    
+        // Registrar el daño infligido
+        String mensajeDaño = objetivo.getNombre() + " ha recibido " + daño + " de daño. Vida restante: " + objetivo.getVida();
+        areaMensajes.append(mensajeDaño + "\n");
+    
         // Aumentar el poder de Liu Kang
         this.poder += 10;
-
-        // Mostrar mensaje de aumento de poder
-        String mensajePoder = this.nombre + " ha aumentado su poder a: " + this.poder;
-        mostrarMensaje(mensajePoder);
+    
+        // Registrar el aumento de poder
+        String mensajePoder = nombre + " ha aumentado su poder a: " + this.poder;
+        areaMensajes.append(mensajePoder + "\n");
     }
 
     private void mostrarMensaje(String mensaje) {

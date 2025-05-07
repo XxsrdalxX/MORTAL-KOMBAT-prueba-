@@ -41,19 +41,23 @@ public class Videojuego {
             });
         });
 
-        // Acción para el botón "Batalla Rápida"
         btnBatallaRapida.addActionListener(e -> {
             ventanaPrincipal.dispose(); // Cierra la ventana principal
             SeleccionPJGUI seleccion = new SeleccionPJGUI();
-            while (seleccion.getPersonajeSeleccionado() == null) {
-                // Espera a que el jugador seleccione un personaje
-            }
-            Personaje jugador1 = seleccion.getPersonajeSeleccionado(); // Selección de personaje
-            IAbot ia = new IAbot();
-            Personaje cpu = ia.seleccionarPersonajeIA(); // Selección del enemigo
-            new BatallaGUI(jugador1, cpu); // Inicia la batalla rápida
+            seleccion.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent e) {
+                    Personaje jugador1 = seleccion.getPersonajeSeleccionado(); // Selección de personaje
+                    if (jugador1 != null) {
+                        IAbot ia = new IAbot();
+                        Personaje cpu = ia.seleccionarPersonajeIA(); // Selección del enemigo
+                        new BatallaGUI(jugador1, cpu); // Inicia la batalla rápida
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No seleccionaste un personaje. Cerrando el juego.");
+                    }
+                }
+            });
         });
-
         // Mostrar la ventana principal
         ventanaPrincipal.setVisible(true);
 

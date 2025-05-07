@@ -57,32 +57,36 @@ public abstract class Personaje {
     }
 
     // Reducir turnos del estado
-    public void reducirTurnosEstado() {
+    public void reducirTurnosEstado(JTextArea areaMensajes) {
         if (turnosEstado > 0) {
             turnosEstado--;
             if (turnosEstado == 0) {
                 estado = Estados.NORMAL; // Vuelve al estado normal
-                JOptionPane.showMessageDialog(null, nombre + " ya no está afectado por ningún estado.", "Estado",
-                        JOptionPane.INFORMATION_MESSAGE);
+    
+                // Registrar el mensaje en el área de texto
+                String mensaje = nombre + " ya no está afectado por ningún estado.";
+                areaMensajes.append(mensaje + "\n");
             }
         }
     }
 
     // Métodos de combate
-    public void atacar(Personaje objetivo) {
+    public void atacar(Personaje objetivo, JTextArea areaMensajes) {
         int daño = Math.max(0, poder - objetivo.defensa);
         objetivo.setVida(objetivo.getVida() - daño);
-        JOptionPane.showMessageDialog(null,
-                nombre + " atacó a " + objetivo.getNombre() + " causando " + daño + " de daño.", "Ataque",
-                JOptionPane.INFORMATION_MESSAGE);
-
+    
+        // Registrar el mensaje en el área de texto
+        String mensaje = nombre + " atacó a " + objetivo.getNombre() + " causando " + daño + " de daño.";
+        areaMensajes.append(mensaje + "\n");
     }
 
-    public void curar() {
+    public void curar(JTextArea areaMensajes) {
         int curacion = 20; // Cantidad fija de curación
         setVida(vida + curacion);
-        JOptionPane.showMessageDialog(null, nombre + " se curó " + curacion + " puntos de vida.", "Curación",
-                JOptionPane.INFORMATION_MESSAGE);
+    
+        // Registrar el mensaje en el área de texto
+        String mensaje = nombre + " se curó " + curacion + " puntos de vida.";
+        areaMensajes.append(mensaje + "\n");
     }
 
     // Método abstracto para la habilidad especial

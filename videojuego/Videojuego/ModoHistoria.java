@@ -102,7 +102,7 @@ public class ModoHistoria extends JFrame {
         panelBotones.add(btnHabilidad);
         panelBotones.add(btnFatality); // Agregar botón Fatality al panel
         panelBotones.add(btnCombo); // Agregar botón Combo al panel
-        panelBotones.add(new JButton("Salir")); // Botón de salir (puedes agregar funcionalidad)
+        panelBotones.add(new JButton("Salir")); // Botón de salir 
         add(panelBotones, BorderLayout.SOUTH);
 
         // Agregar listeners a los botones
@@ -145,19 +145,24 @@ public class ModoHistoria extends JFrame {
             enemigos.remove(enemigoActual);
             if (enemigos.isEmpty()) {
                 areaMensajes.append("¡Felicidades! Has completado el modo historia.\n");
+                JOptionPane.showMessageDialog(this, "¡Felicidades! Has completado el modo historia.", "Victoria", JOptionPane.INFORMATION_MESSAGE);
+                System.exit(0); // Cierra el programa
                 return;
             }
             enemigoActual = enemigos.get(0);
             areaMensajes.append("¡Nuevo enemigo: " + enemigoActual.getNombre() + "!\n");
         }
-
+    
         if (jugador.getVida() <= 0) {
             areaMensajes.append("Has sido derrotado. Fin del modo historia.\n");
+            JOptionPane.showMessageDialog(this, "Has sido derrotado. Fin del modo historia.", "Derrota", JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0); // Cierra el programa
         }
+    
         // Habilitar o deshabilitar el botón "Fatality"
         JButton btnFatality = (JButton) ((JPanel) getContentPane().getComponent(2)).getComponent(3);
         btnFatality.setEnabled(enemigoActual.getVida() <= 30);
-
+    
         actualizarInfo();
     }
 
@@ -222,7 +227,7 @@ public class ModoHistoria extends JFrame {
             String mensaje = "P1: " + jugador.getNombre() + " está " + jugador.getEstado().toString().toLowerCase()
                     + " y no puede actuar.";
             areaMensajes.append(mensaje + "\n");
-            jugador.reducirTurnosEstado(); // Reducir el efecto del estado
+            jugador.reducirTurnosEstado(areaMensajes); // Reducir el efecto del estado
             turnoEnemigo(); // Pasar el turno al enemigo
             return;
         }
@@ -247,41 +252,35 @@ public class ModoHistoria extends JFrame {
     }
 
     private void atacar() {
-        jugador.atacar(enemigoActual);
+        jugador.atacar(enemigoActual, areaMensajes); // Pasar el área de mensajes
         String mensaje = "P1: " + jugador.getNombre() + " atacó a " + enemigoActual.getNombre() + ".";
         areaMensajes.append(mensaje + "\n");
         verificarEstado();
     }
 
     private void curar() {
-        jugador.curar();
+        jugador.curar(areaMensajes); // Pasar el área de mensajes
         String mensaje = "P1: " + jugador.getNombre() + " se curó.";
         areaMensajes.append(mensaje + "\n");
         actualizarInfo();
     }
-
-    private void usarHabilidadEspecial() {
-        jugador.habilidadEspecial(enemigoActual, areaMensajes); // Pasar el área de mensajes
-        String mensaje = "P1: " + jugador.getNombre() + " usó su habilidad especial contra " + enemigoActual.getNombre()
-                + ".";
-        areaMensajes.append(mensaje + "\n");
-        verificarEstado();
-    }
-
+private void usarHabilidadEspecial() {
+    jugador.habilidadEspecial(enemigoActual, areaMensajes); // Pasar el área de mensajes
+    String mensaje = "P1: " + jugador.getNombre() + " usó su habilidad especial contra " + enemigoActual.getNombre() + ".";
+    areaMensajes.append(mensaje + "\n");
+    verificarEstado();
+}
     // ============================
     // Turno del enemigo
     // ============================
     private void turnoEnemigo() {
         if (enemigoActual.getEstado() == Estados.PARALIZADO) {
-            String mensaje = "CPU: " + enemigoActual.getNombre() + " está paralizado y no puede actuar.";
-            areaMensajes.append(mensaje + "\n");
-            enemigoActual.reducirTurnosEstado(); // Reducir el efecto de parálisis
+            areaMensajes.append("CPU: " + enemigoActual.getNombre() + " está paralizado y no puede actuar.\n");
+            enemigoActual.reducirTurnosEstado(areaMensajes); // Reducir el efecto de parálisis
             return;
         }
-
-        if (enemigoActual.getVida() > 0) { // Solo actúa si sigue vivo
-            String accionEnemigo = iaBot.decidirAccion(enemigoActual, jugador, areaMensajes);
-            verificarEstado();
-        }
+    
+        iaBot.decidirAccion(enemigoActual, jugador, areaMensajes); // Llama al método de la IA para decidir la acción
+        verificarEstado(); // Verificar el estado del jugador y enemigo
     }
 }

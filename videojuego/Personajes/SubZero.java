@@ -14,19 +14,23 @@ public class SubZero extends Personaje {
     @Override
     public void habilidadEspecial(Personaje objetivo, JTextArea areaMensajes) {
         if (cooldownHabilidad > 0) {
-            JOptionPane.showMessageDialog(null, nombre + " no puede usar su habilidad especial. Cooldown restante: "
-                    + cooldownHabilidad + " turnos.", "Cooldown", JOptionPane.INFORMATION_MESSAGE);
+            // Registrar el mensaje en el área de texto si la habilidad está en cooldown
+            String mensaje = nombre + " no puede usar su habilidad especial. Cooldown restante: " + cooldownHabilidad + " turnos.";
+            areaMensajes.append(mensaje + "\n");
+            reducirCooldown();
             return;
         }
-
+    
         if (objetivo.getEstado() == Estados.NORMAL) {
-            JOptionPane.showMessageDialog(null, nombre + " usa su habilidad especial: ¡Congelación!",
-                    "Habilidad Especial", JOptionPane.INFORMATION_MESSAGE);
+            // Usar la habilidad especial
+            String mensaje = nombre + " usa su habilidad especial: ¡Congelación!";
+            areaMensajes.append(mensaje + "\n");
             objetivo.setEstado(Estados.CONGELADO, 2); // Congela al objetivo por 2 turnos
             cooldownHabilidad = 3; // Cooldown de 3 turnos
         } else {
-            JOptionPane.showMessageDialog(null, objetivo.getNombre() + " ya está afectado por un estado.", "Estado",
-                    JOptionPane.INFORMATION_MESSAGE);
+            // Registrar el mensaje si el objetivo ya está afectado por un estado
+            String mensaje = objetivo.getNombre() + " ya está afectado por un estado.";
+            areaMensajes.append(mensaje + "\n");
         }
     }
 
