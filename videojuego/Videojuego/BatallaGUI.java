@@ -13,15 +13,11 @@ public class BatallaGUI extends JFrame {
     private IAbot iaBot = new IAbot(); // Instancia de la IA para el enemigo
     private int contadorTurnos = 0; // Contador de turnos
     private HashMap<String, Runnable> fatalitys; // Almacena los fatalitys y sus efectos
-    
-
-
 
     private JLabel labelJugadorNombre, labelEnemigoNombre;
 
     public BatallaGUI(Personaje jugador, Personaje enemigo) {
 
-        
         this.jugador = jugador;
         this.enemigo = enemigo;
 
@@ -42,6 +38,12 @@ public class BatallaGUI extends JFrame {
         // Panel central: Área de mensajes
         areaMensajes = new JTextArea();
         areaMensajes.setEditable(false);
+        areaMensajes.setFont(new Font("Monospaced", Font.PLAIN, 14)); // Cambiar la fuente si es necesario
+        areaMensajes.putClientProperty("Nimbus.Overrides", new UIDefaults() {
+            {
+                put("TextArea.lineSpacing", 0.2); // Ajustar el espaciado entre líneas
+            }
+        });
         JScrollPane scrollPane = new JScrollPane(areaMensajes);
         add(scrollPane, BorderLayout.CENTER);
 
@@ -53,7 +55,7 @@ public class BatallaGUI extends JFrame {
         JButton btnCombo = new JButton("Combo");
         JButton btnFatality = new JButton("Fatality");
         JButton btnSalir = new JButton("Salir");
-      
+
         panelBotones.add(btnAtacar);
         panelBotones.add(btnCurar);
         panelBotones.add(btnHabilidad);
@@ -62,21 +64,14 @@ public class BatallaGUI extends JFrame {
         panelBotones.add(btnSalir);
         add(panelBotones, BorderLayout.SOUTH);
 
-        // Listeners para los botones
-        btnAtacar.addActionListener(e -> atacar());
-        btnCurar.addActionListener(e -> curar());
-        btnHabilidad.addActionListener(e -> usarHabilidadEspecial());
-        btnFatality.addActionListener(e -> realizarFatality(btnFatality));
-        btnCombo.addActionListener(e -> usarCombo(btnCombo));
         btnCombo.setEnabled(false); // Deshabilitar el botón Combo al inicio
         btnFatality.setEnabled(false); // Deshabilitar el botón Fatality al inicio
- // Agregar listeners a los botones
- agregarListeners(btnAtacar, btnCurar, btnHabilidad, btnFatality, btnCombo);
+        // Agregar listeners a los botones
+        agregarListeners(btnAtacar, btnCurar, btnHabilidad, btnFatality, btnCombo);
 
         setVisible(true);
     }
 
-    
     private void agregarListeners(JButton btnAtacar, JButton btnCurar, JButton btnHabilidad, JButton btnFatality,
             JButton btnCombo) {
         btnAtacar.addActionListener(e -> turnoJugador("atacar"));
@@ -85,7 +80,6 @@ public class BatallaGUI extends JFrame {
         btnFatality.addActionListener(e -> realizarFatality(btnFatality));
         btnCombo.addActionListener(e -> usarCombo(btnCombo));
     }
-
 
     private void inicializarBarrasDeVida(JPanel panelInfo) {
         // Barra de vida del jugador
@@ -109,6 +103,7 @@ public class BatallaGUI extends JFrame {
         barraJugadorVida.setValue(jugador.getVida());
         barraEnemigoVida.setValue(enemigo.getVida());
     }
+
     private void actualizarInfo() {
         // Actualizar nombres y barras de vida
         labelJugadorNombre.setText(jugador.getNombre() + " - Vida: " + jugador.getVida());
@@ -121,6 +116,7 @@ public class BatallaGUI extends JFrame {
     private void realizarFatality(JButton btnFatality) {
         if (enemigo.getVida() <= 30) {
             // Inicializar el mapa de fatalitys si no está inicializado
+            btnFatality.setEnabled(true); // Deshabilitar el botón de Fatality después de usarlo
             if (fatalitys == null) {
                 fatalitys = new HashMap<>();
                 fatalitys.put("QWEERWWQ", () -> {
@@ -132,7 +128,7 @@ public class BatallaGUI extends JFrame {
             }
 
             // Mostrar la secuencia requerida al jugador
-            String secuenciaRequerida = "QWEERWWQ"; 
+            String secuenciaRequerida = "QWEERWWQ";
             String mensaje = "Para realizar el Fatality, ingresa la siguiente secuencia:\n" + secuenciaRequerida;
 
             // Solicitar la secuencia al jugador
@@ -144,19 +140,20 @@ public class BatallaGUI extends JFrame {
             // Validar la secuencia ingresada
             if (secuenciaIngresada != null && fatalitys.containsKey(secuenciaIngresada)) {
                 fatalitys.get(secuenciaIngresada).run(); // Ejecutar el Fatality
+                btnFatality.setEnabled(false); // Deshabilitar el botón de Fatality después de usarlo
             } else {
                 areaMensajes.append("Secuencia incorrecta. No se pudo realizar el Fatality.\n");
+                btnFatality.setEnabled(false); // Deshabilitar el botón de Fatality después de usarlo
             }
         } else {
             areaMensajes.append("El enemigo tiene demasiada vida para realizar un Fatality.\n");
+
         }
     }
 
-
-
     private void verificarActivacionCombo() {
         if (contadorTurnos >= 3) {
-            JButton btnCombo = (JButton) ((JPanel) getContentPane().getComponent(2)).getComponent(4); // Botón Combo
+            JButton btnCombo = (JButton) ((JPanel) getContentPane().getComponent(2)).getComponent(3); // Botón Combo
             btnCombo.setEnabled(true); // Habilitar el botón de combo
             areaMensajes.append("¡El botón de Combo está ahora disponible!\n");
         }
@@ -178,7 +175,7 @@ public class BatallaGUI extends JFrame {
             String mensaje = "P1: " + jugador.getNombre() + " está " + jugador.getEstado().toString().toLowerCase()
                     + " y no puede actuar.";
             areaMensajes.append(mensaje + "\n");
-            jugador.reducirTurnosEstado(); // Reducir el efecto del estado
+            jugador.reducirTurnosEstado(areaMensajes); // Reducir el efecto del estado
             turnoEnemigo(); // Pasar el turno al enemigo
             return;
         }
@@ -203,52 +200,61 @@ public class BatallaGUI extends JFrame {
     }
 
     private void atacar() {
-        jugador.atacar(enemigo);
+        jugador.atacar(enemigo, areaMensajes);
         areaMensajes.append("P1: " + jugador.getNombre() + " atacó a " + enemigo.getNombre() + "\n");
         actualizarBarrasDeVida();
         verificarEstado();
-        turnoEnemigo();
+
     }
 
     private void curar() {
-        jugador.curar();
+        jugador.curar(areaMensajes);
         areaMensajes.append("P1: " + jugador.getNombre() + " se curó.\n");
         actualizarBarrasDeVida();
-        turnoEnemigo();
+        verificarEstado();
     }
 
     private void usarHabilidadEspecial() {
-        jugador.habilidadEspecial(enemigo, areaMensajes);
-        areaMensajes.append("P1: " + jugador.getNombre() + " usó su habilidad especial contra " + enemigo.getNombre() + "\n");
-        actualizarBarrasDeVida();
+        jugador.habilidadEspecial(enemigo, areaMensajes); // Pasar el área de mensajes
+        String mensaje = "P1: " + jugador.getNombre() + " usó su habilidad especial contra " + enemigo.getNombre()
+                + ".";
+        areaMensajes.append(mensaje + "\n");
         verificarEstado();
-        turnoEnemigo();
     }
 
     private void turnoEnemigo() {
         if (enemigo.getEstado() == Estados.PARALIZADO) {
             areaMensajes.append("CPU: " + enemigo.getNombre() + " está paralizado y no puede actuar.\n");
-            enemigo.reducirTurnosEstado(); // Reducir el efecto de parálisis
+            enemigo.reducirTurnosEstado(areaMensajes); // Reducir el efecto de parálisis
             return;
         }
-    
+
         iaBot.decidirAccion(enemigo, jugador, areaMensajes); // El enemigo decide su acción
         actualizarBarrasDeVida(); // Actualizar las barras de vida después de la acción del enemigo
         verificarEstado(); // Verificar el estado después de la acción del enemigo
     }
-    
+
     private void verificarEstado() {
         if (enemigo.getVida() <= 0) {
             areaMensajes.append("¡Has derrotado a " + enemigo.getNombre() + "!\n");
             JOptionPane.showMessageDialog(this, "¡Ganaste la batalla!");
-            dispose(); // Cierra la ventana
+            dispose(); // Cerrar la ventana de batalla
+            return;
         }
 
         if (jugador.getVida() <= 0) {
-            areaMensajes.append("Has sido derrotado por " + enemigo.getNombre() + ".\n");
-            JOptionPane.showMessageDialog(this, "¡Perdiste la batalla!");
-            dispose(); // Cierra la ventana
+            areaMensajes.append("Has sido derrotado. Fin del juego.\n");
+            JOptionPane.showMessageDialog(this, "Has sido derrotado. Fin del juego.", "Derrota",
+                    JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0); // Cerrar el programa
+            return;
         }
+
+        // Habilitar o deshabilitar el botón "Fatality"
+        JButton btnFatality = (JButton) ((JPanel) getContentPane().getComponent(2)).getComponent(3); // Índice del botón
+                                                                                                     // Fatality
+        btnFatality.setEnabled(enemigo.getVida() <= (enemigo.getVidaMaxima() * 0.3)); // Habilitar si la vida es <= 30%
+
+        actualizarBarrasDeVida(); // Actualizar las barras de vida
     }
 }
-    
