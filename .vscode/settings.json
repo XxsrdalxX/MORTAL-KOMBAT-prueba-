@@ -1,0 +1,8 @@
+{
+    "java.project.resourceFilters": [
+      "node_modules",
+      "bin",
+      "**/*.class"
+    ]
+  }
+  

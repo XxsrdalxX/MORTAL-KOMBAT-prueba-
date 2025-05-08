@@ -3,6 +3,8 @@ package Videojuego;
 import Personajes.*;
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
+
 
 public class SeleccionPJGUI extends JFrame {
 
@@ -57,14 +59,16 @@ public class SeleccionPJGUI extends JFrame {
     }
 
     // Método para configurar la imagen de un botón
-    private void configurarImagenBoton(JButton boton, String rutaImagen) {
-        ImageIcon icono = new ImageIcon(getClass().getResource(rutaImagen)); // Carga la imagen
-        Image imagenEscalada = icono.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH); // Escala la imagen
-        boton.setIcon(new ImageIcon(imagenEscalada)); // Establece la imagen como ícono del botón
-        boton.setHorizontalTextPosition(SwingConstants.CENTER); // Centra el texto
-        boton.setVerticalTextPosition(SwingConstants.BOTTOM); // Coloca el texto debajo de la imagen
-    }
+    // Método para configurar la imagen de un botón
+public void configurarImagenBoton(JButton boton, String ruta) {
+    ImageIcon icono = new ImageIcon(getClass().getResource(ruta));
+    Image img = icono.getImage(); // Obtiene la imagen
+    Image imgRedimensionada = img.getScaledInstance(100, 100, Image.SCALE_SMOOTH); // Redimensiona la imagen
+    boton.setIcon(new ImageIcon(imgRedimensionada)); // Asigna la imagen redimensionada al botón
+}
 
+    
+    
     private void seleccionarPersonaje(Personaje personaje) {
         personajeSeleccionado = personaje;
         JOptionPane.showMessageDialog(this, "Has seleccionado a " + personaje.getNombre());
