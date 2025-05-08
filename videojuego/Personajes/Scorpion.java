@@ -25,7 +25,7 @@ public class Scorpion extends Personaje {
     public void habilidadEspecial(Personaje objetivo, JTextArea areaMensajes) {
         int dañoPorQuemadura = 5; // Daño inicial por quemadura
         objetivo.setVida(objetivo.getVida() - dañoPorQuemadura);
-        objetivo.setEstado(Estados.QUEMADO, 3); // Quemar al objetivo por 3 turnos
+        objetivo.setEstado(Estados.QUEMADO, 1); // Quemar al objetivo por 3 turnos
 
         String mensaje = nombre + " usó su habilidad especial y quemó a " + objetivo.getNombre() + ".";
         areaMensajes.append(mensaje + "\n");

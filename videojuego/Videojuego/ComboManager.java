@@ -23,9 +23,9 @@ public class ComboManager {
     // Inicializa los combos disponibles
     private void inicializarCombos() {
         combos = new HashMap<>();
-        combos.put("WASDBBCEWWA", () -> realizarCombo("Combo de Ataque Rápido", 50));
-        combos.put("QWEYUUUWSKD", () -> realizarCombo("Combo de Habilidad Especial", 100));
-        combos.put("ASDDLLSÑÑEP", () -> realizarCombo("Combo de Curación", -30)); // Curación
+        combos.put("WASD", () -> realizarCombo("Combo de Ataque Rápido", 50));
+        combos.put("QWE", () -> realizarCombo("Combo de Habilidad Especial", 100));
+        combos.put("ASD", () -> realizarCombo("Combo de Curación", -30)); // Curación
     }
 
     // Muestra una ventana para que el usuario ingrese un combo

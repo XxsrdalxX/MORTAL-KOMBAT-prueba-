@@ -31,6 +31,22 @@ public abstract class Personaje {
         return turnosEstado;
     }
 
+    public int getPoder() {
+        return poder;
+    }
+
+    public void setPoder(int poder) {
+        this.poder = Math.max(0, poder); // Asegura que el poder no sea negativo
+    }
+
+    public int getResistencia() {
+        return defensa; // La resistencia está representada por la defensa
+    }
+
+    public void setResistencia(int resistencia) {
+        this.defensa = Math.max(0, resistencia); // Asegura que la resistencia no sea negativa
+    }
+
     public Estados getEstado() {
         return estado;
     }
@@ -48,6 +64,10 @@ public abstract class Personaje {
         this.vida = Math.max(0, Math.min(vida, vidaMaxima)); // Asegura que la vida esté entre 0 y el máximo
     }
 
+    public void setVidaMaxima(int vidaMaxima) {
+        this.vidaMaxima = Math.max(0, vidaMaxima); // Asegura que la vida máxima no sea negativa
+    }
+
     public int getVidaMaxima() {
         return vidaMaxima;
     }
@@ -62,7 +82,7 @@ public abstract class Personaje {
             turnosEstado--;
             if (turnosEstado == 0) {
                 estado = Estados.NORMAL; // Vuelve al estado normal
-    
+
                 // Registrar el mensaje en el área de texto
                 String mensaje = nombre + " ya no está afectado por ningún estado.";
                 areaMensajes.append(mensaje + "\n");
@@ -74,7 +94,7 @@ public abstract class Personaje {
     public void atacar(Personaje objetivo, JTextArea areaMensajes) {
         int daño = Math.max(0, poder - objetivo.defensa);
         objetivo.setVida(objetivo.getVida() - daño);
-    
+
         // Registrar el mensaje en el área de texto
         String mensaje = nombre + " atacó a " + objetivo.getNombre() + " causando " + daño + " de daño.";
         areaMensajes.append(mensaje + "\n");
@@ -83,7 +103,7 @@ public abstract class Personaje {
     public void curar(JTextArea areaMensajes) {
         int curacion = 20; // Cantidad fija de curación
         setVida(vida + curacion);
-    
+
         // Registrar el mensaje en el área de texto
         String mensaje = nombre + " se curó " + curacion + " puntos de vida.";
         areaMensajes.append(mensaje + "\n");

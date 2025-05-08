@@ -58,6 +58,8 @@ public class Videojuego {
                 }
             });
         });
+
+        ventanaPrincipal.setLocationRelativeTo(null); // Centrar la ventana en la pantalla
         // Mostrar la ventana principal
         ventanaPrincipal.setVisible(true);
 

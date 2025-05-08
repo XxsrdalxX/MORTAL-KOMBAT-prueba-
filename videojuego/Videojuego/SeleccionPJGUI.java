@@ -10,7 +10,7 @@ public class SeleccionPJGUI extends JFrame {
 
     public SeleccionPJGUI() {
         setTitle("Selecciona tu personaje");
-        setSize(400, 300);
+        setSize(1000, 900);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Permite cerrar solo esta ventana
         setLayout(new BorderLayout());
 
@@ -27,11 +27,20 @@ public class SeleccionPJGUI extends JFrame {
         JButton btnSubZero = new JButton("Sub-Zero");
         JButton btnKitana = new JButton("Kitana");
 
+        // Agregar imágenes a los botones
+        configurarImagenBoton(btnLiuKang, "/Resources/LiuKang.jpg");
+        configurarImagenBoton(btnRaiden, "/Resources/Raiden.jpg");
+        configurarImagenBoton(btnScorpion, "/Resources/Scorpion.jpg");
+        configurarImagenBoton(btnSubZero, "/Resources/SubZero.jpg");
+        configurarImagenBoton(btnKitana, "/Resources/Kitana.jpg");
+
+        // Agregar botones al panel
         panelPersonajes.add(btnLiuKang);
         panelPersonajes.add(btnRaiden);
         panelPersonajes.add(btnScorpion);
         panelPersonajes.add(btnSubZero);
         panelPersonajes.add(btnKitana);
+
         add(panelPersonajes, BorderLayout.CENTER);
 
         // Listeners para los botones
@@ -45,6 +54,15 @@ public class SeleccionPJGUI extends JFrame {
 
         setLocationRelativeTo(null); // Centra la ventana en la pantalla
         setVisible(true); // Muestra la ventana
+    }
+
+    // Método para configurar la imagen de un botón
+    private void configurarImagenBoton(JButton boton, String rutaImagen) {
+        ImageIcon icono = new ImageIcon(getClass().getResource(rutaImagen)); // Carga la imagen
+        Image imagenEscalada = icono.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH); // Escala la imagen
+        boton.setIcon(new ImageIcon(imagenEscalada)); // Establece la imagen como ícono del botón
+        boton.setHorizontalTextPosition(SwingConstants.CENTER); // Centra el texto
+        boton.setVerticalTextPosition(SwingConstants.BOTTOM); // Coloca el texto debajo de la imagen
     }
 
     private void seleccionarPersonaje(Personaje personaje) {

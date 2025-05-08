@@ -17,7 +17,6 @@ public class ModoHistoria extends JFrame {
     private Personaje enemigoActual;
     private IAbot iaBot; // Instancia de la IA
     private int contadorTurnos = 0; // Contador de turnos
-
     // Componentes de la interfaz gráfica
     private JTextArea areaMensajes;
     private JLabel labelJugadorNombre, labelEnemigoNombre;
@@ -38,7 +37,9 @@ public class ModoHistoria extends JFrame {
         ComboManager comboManager = new ComboManager(areaMensajes, jugador, enemigoActual); // Inicializa el
                                                                                             // ComboManager
         actualizarInfo(); // Actualiza la información inicial de los personajes
-        setVisible(true);
+        setLocationRelativeTo(null); // Centrar la ventana en la pantalla
+        setVisible(true); // Mostrar la ventana
+
     }
 
     // ============================
@@ -102,7 +103,7 @@ public class ModoHistoria extends JFrame {
         panelBotones.add(btnHabilidad);
         panelBotones.add(btnFatality); // Agregar botón Fatality al panel
         panelBotones.add(btnCombo); // Agregar botón Combo al panel
-        panelBotones.add(new JButton("Salir")); // Botón de salir 
+        panelBotones.add(new JButton("Salir")); // Botón de salir
         add(panelBotones, BorderLayout.SOUTH);
 
         // Agregar listeners a los botones
@@ -145,24 +146,26 @@ public class ModoHistoria extends JFrame {
             enemigos.remove(enemigoActual);
             if (enemigos.isEmpty()) {
                 areaMensajes.append("¡Felicidades! Has completado el modo historia.\n");
-                JOptionPane.showMessageDialog(this, "¡Felicidades! Has completado el modo historia.", "Victoria", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "¡Felicidades! Has completado el modo historia.", "Victoria",
+                        JOptionPane.INFORMATION_MESSAGE);
                 System.exit(0); // Cierra el programa
                 return;
             }
             enemigoActual = enemigos.get(0);
             areaMensajes.append("¡Nuevo enemigo: " + enemigoActual.getNombre() + "!\n");
         }
-    
+
         if (jugador.getVida() <= 0) {
             areaMensajes.append("Has sido derrotado. Fin del modo historia.\n");
-            JOptionPane.showMessageDialog(this, "Has sido derrotado. Fin del modo historia.", "Derrota", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Has sido derrotado. Fin del modo historia.", "Derrota",
+                    JOptionPane.INFORMATION_MESSAGE);
             System.exit(0); // Cierra el programa
         }
-    
+
         // Habilitar o deshabilitar el botón "Fatality"
         JButton btnFatality = (JButton) ((JPanel) getContentPane().getComponent(2)).getComponent(3);
         btnFatality.setEnabled(enemigoActual.getVida() <= 30);
-    
+
         actualizarInfo();
     }
 
@@ -264,12 +267,15 @@ public class ModoHistoria extends JFrame {
         areaMensajes.append(mensaje + "\n");
         actualizarInfo();
     }
-private void usarHabilidadEspecial() {
-    jugador.habilidadEspecial(enemigoActual, areaMensajes); // Pasar el área de mensajes
-    String mensaje = "P1: " + jugador.getNombre() + " usó su habilidad especial contra " + enemigoActual.getNombre() + ".";
-    areaMensajes.append(mensaje + "\n");
-    verificarEstado();
-}
+
+    private void usarHabilidadEspecial() {
+        jugador.habilidadEspecial(enemigoActual, areaMensajes); // Pasar el área de mensajes
+        String mensaje = "P1: " + jugador.getNombre() + " usó su habilidad especial contra " + enemigoActual.getNombre()
+                + ".";
+        areaMensajes.append(mensaje + "\n");
+        verificarEstado();
+    }
+
     // ============================
     // Turno del enemigo
     // ============================
@@ -279,7 +285,7 @@ private void usarHabilidadEspecial() {
             enemigoActual.reducirTurnosEstado(areaMensajes); // Reducir el efecto de parálisis
             return;
         }
-    
+
         iaBot.decidirAccion(enemigoActual, jugador, areaMensajes); // Llama al método de la IA para decidir la acción
         verificarEstado(); // Verificar el estado del jugador y enemigo
     }
