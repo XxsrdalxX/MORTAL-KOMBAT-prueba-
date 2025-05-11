@@ -5,6 +5,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
+
 import javax.swing.*;
 
 public class ModoHistoria extends JFrame {
@@ -17,6 +19,9 @@ public class ModoHistoria extends JFrame {
     private Personaje enemigoActual;
     private IAbot iaBot; // Instancia de la IA
     private int contadorTurnos = 0; // Contador de turnos
+  private List<String> bolsa; // Bolsa de objetos (almacena nombres de objetos)
+private Objetos gestorObjetos; // Instancia para gestionar los efectos de los objet
+    
     // Componentes de la interfaz gráfica
     private JTextArea areaMensajes;
     private JLabel labelJugadorNombre, labelEnemigoNombre;
@@ -31,11 +36,13 @@ public class ModoHistoria extends JFrame {
         this.enemigoActual = enemigos.get(0);
         this.iaBot = new IAbot(); // Inicializa la IA
         this.contadorTurnos = 0; // Inicializa el contador de turnos
+        this.bolsa = new ArrayList<>(); // Inicializa la bolsa vacía
+    this.gestorObjetos = new Objetos(jugador); // Inicializa el gestor de objetos
+
 
         configurarVentana();
         inicializarComponentes();
-        ComboManager comboManager = new ComboManager(areaMensajes, jugador, enemigoActual); // Inicializa el
-                                                                                            // ComboManager
+        ComboManager comboManager = new ComboManager(areaMensajes, jugador, enemigoActual); // Inicializa el                                                                                 // ComboManager
         actualizarInfo(); // Actualiza la información inicial de los personajes
         setLocationRelativeTo(null); // Centrar la ventana en la pantalla
         setVisible(true); // Mostrar la ventana
@@ -93,8 +100,9 @@ public class ModoHistoria extends JFrame {
         JButton btnCurar = new JButton("Curarse");
         JButton btnHabilidad = new JButton("Habilidad Especial");
         JButton btnFatality = new JButton("Fatality");
-        JButton btnCombo = new JButton("Combo");// Botón Combo// Botón
-                                                // para combos
+        JButton btnCombo = new JButton("Combo");// Botón Combo
+        JButton btnBolsa = new JButton("Ver Bolsa");
+                                                
         btnCombo.setEnabled(false); // Deshabilitar el botón Combo al inicio
         btnFatality.setEnabled(false); // Deshabilitar el botón Fatality al inicio
 
@@ -103,20 +111,21 @@ public class ModoHistoria extends JFrame {
         panelBotones.add(btnHabilidad);
         panelBotones.add(btnFatality); // Agregar botón Fatality al panel
         panelBotones.add(btnCombo); // Agregar botón Combo al panel
-        panelBotones.add(new JButton("Salir")); // Botón de salir
+        panelBotones.add(btnBolsa); // Botón de salir
         add(panelBotones, BorderLayout.SOUTH);
 
         // Agregar listeners a los botones
-        agregarListeners(btnAtacar, btnCurar, btnHabilidad, btnFatality, btnCombo);
+        agregarListeners(btnAtacar, btnCurar, btnHabilidad, btnFatality, btnCombo, btnBolsa);
     }
 
     private void agregarListeners(JButton btnAtacar, JButton btnCurar, JButton btnHabilidad, JButton btnFatality,
-            JButton btnCombo) {
+            JButton btnCombo, JButton btnBolsa) {
         btnAtacar.addActionListener(e -> turnoJugador("atacar"));
         btnCurar.addActionListener(e -> turnoJugador("curar"));
         btnHabilidad.addActionListener(e -> turnoJugador("habilidad"));
         btnFatality.addActionListener(e -> realizarFatality(btnFatality));
         btnCombo.addActionListener(e -> usarCombo(btnCombo));
+        btnBolsa.addActionListener(e -> mostrarBolsa()); // Mostrar bolsa de objetos
     }
 
     // ============================
@@ -139,36 +148,39 @@ public class ModoHistoria extends JFrame {
         labelEnemigoNombre.setText(enemigoActual.getNombre() + " - Vida: " + enemigoActual.getVida());
         barraEnemigoVida.setValue(enemigoActual.getVida());
     }
+// ============================
+// Verificar estado del juego
+// ============================
+private void verificarEstado() {
+    if (enemigoActual.getVida() <= 0) {
+        areaMensajes.append("¡Has derrotado a " + enemigoActual.getNombre() + "!\n");
+        enemigos.remove(enemigoActual);
 
-    private void verificarEstado() {
-        if (enemigoActual.getVida() <= 0) {
-            areaMensajes.append("¡Has derrotado a " + enemigoActual.getNombre() + "!\n");
-            enemigos.remove(enemigoActual);
-            if (enemigos.isEmpty()) {
-                areaMensajes.append("¡Felicidades! Has completado el modo historia.\n");
-                JOptionPane.showMessageDialog(this, "¡Felicidades! Has completado el modo historia.", "Victoria",
-                        JOptionPane.INFORMATION_MESSAGE);
-                System.exit(0); // Cierra el programa
-                return;
-            }
-            enemigoActual = enemigos.get(0);
-            areaMensajes.append("¡Nuevo enemigo: " + enemigoActual.getNombre() + "!\n");
-        }
+        // Generar un objeto aleatorio y agregarlo a la bolsa
+        String nuevoObjeto = generarObjetoAleatorio();
+        bolsa.add(nuevoObjeto);
+        areaMensajes.append("¡Has obtenido un objeto: " + nuevoObjeto + "!\n");
 
-        if (jugador.getVida() <= 0) {
-            areaMensajes.append("Has sido derrotado. Fin del modo historia.\n");
-            JOptionPane.showMessageDialog(this, "Has sido derrotado. Fin del modo historia.", "Derrota",
+        if (enemigos.isEmpty()) {
+            areaMensajes.append("¡Felicidades! Has completado el modo historia.\n");
+            JOptionPane.showMessageDialog(this, "¡Felicidades! Has completado el modo historia.", "Victoria",
                     JOptionPane.INFORMATION_MESSAGE);
             System.exit(0); // Cierra el programa
+            return;
         }
-
-        // Habilitar o deshabilitar el botón "Fatality"
-        JButton btnFatality = (JButton) ((JPanel) getContentPane().getComponent(2)).getComponent(3);
-        btnFatality.setEnabled(enemigoActual.getVida() <= 30);
-
-        actualizarInfo();
+        enemigoActual = enemigos.get(0);
+        areaMensajes.append("¡Nuevo enemigo: " + enemigoActual.getNombre() + "!\n");
     }
 
+    if (jugador.getVida() <= 0) {
+        areaMensajes.append("Has sido derrotado. Fin del modo historia.\n");
+        JOptionPane.showMessageDialog(this, "Has sido derrotado. Fin del modo historia.", "Derrota",
+                JOptionPane.INFORMATION_MESSAGE);
+        System.exit(0); // Cierra el programa
+    }
+
+    actualizarInfo();
+}
     private void realizarFatality(JButton btnFatality) {
         if (enemigoActual.getVida() <= 30) {
             // Inicializar el mapa de fatalitys si no está inicializado
@@ -289,4 +301,49 @@ public class ModoHistoria extends JFrame {
         iaBot.decidirAccion(enemigoActual, jugador, areaMensajes); // Llama al método de la IA para decidir la acción
         verificarEstado(); // Verificar el estado del jugador y enemigo
     }
+
+     // ============================
+    // Generar objeto aleatorio
+    // ============================
+ private String generarObjetoAleatorio() {
+    // Lista de nombres de objetos disponibles
+    String[] objetosDisponibles = {
+        "Poción de Salud",
+        "Elixir de Poder",
+        "Escudo de Resistencia",
+        "Antídoto",
+        "Aumento de Vida Máxima"
+    };
+
+    // Seleccionar un objeto aleatorio
+    int indice = new Random().nextInt(objetosDisponibles.length);
+    return objetosDisponibles[indice];
+}
+
+// ============================
+// Mostrar y usar objetos de la bolsa
+// ============================
+private void mostrarBolsa() {
+    if (bolsa.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Tu bolsa está vacía.", "Bolsa de Objetos", JOptionPane.INFORMATION_MESSAGE);
+        return;
+    }
+
+    // Mostrar los objetos en la bolsa y permitir seleccionar uno
+    String objetoSeleccionado = (String) JOptionPane.showInputDialog(
+            this,
+            "Selecciona un objeto para usar:",
+            "Bolsa de Objetos",
+            JOptionPane.PLAIN_MESSAGE,
+            null,
+            bolsa.toArray(),
+            null);
+
+    if (objetoSeleccionado != null) {
+        gestorObjetos.usarObjeto(objetoSeleccionado); // Usar el objeto
+        bolsa.remove(objetoSeleccionado); // Eliminar el objeto de la bolsa
+        areaMensajes.append("Has usado el objeto: " + objetoSeleccionado + ".\n");
+        actualizarInfo(); // Actualizar la información del jugador
+    }
+}
 }

@@ -8,7 +8,7 @@ public class Objetos {
     private Personaje jugador; // Referencia al jugador actual
 
     // Constructor
-    public Objetos(Personaje jugador) {
+    public Objetos( Personaje jugador) {
         this.jugador = jugador;
         objetos = new HashMap<>();
         inicializarObjetos(); // Inicializa los objetos disponibles
