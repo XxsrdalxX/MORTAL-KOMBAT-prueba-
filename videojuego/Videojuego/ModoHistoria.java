@@ -41,10 +41,12 @@ private Objetos gestorObjetos; // Instancia para gestionar los efectos de los ob
 
 
         configurarVentana();
+    
         inicializarComponentes();
         ComboManager comboManager = new ComboManager(areaMensajes, jugador, enemigoActual); // Inicializa el                                                                                 // ComboManager
         actualizarInfo(); // Actualiza la información inicial de los personajes
         setLocationRelativeTo(null); // Centrar la ventana en la pantalla
+        
         setVisible(true); // Mostrar la ventana
 
     }
@@ -52,71 +54,142 @@ private Objetos gestorObjetos; // Instancia para gestionar los efectos de los ob
     // ============================
     // Configuración de la ventana
     // ============================
-    private void configurarVentana() {
-        setTitle("Modo Historia - Mortal Kombat");
-        setSize(600, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
-    }
+private void configurarVentana() {
+    setTitle("☠️ MORTAL KOMBAT - Modo Historia ☠️");
+    setSize(700, 500);  // Un poco más grande
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setLayout(new BorderLayout(10, 10));
+    
+    // Aplicar colores al fondo
+    getContentPane().setBackground(new Color(25, 25, 30));
+    
+    // Si deseas un borde para el contenido
+    ((JPanel)getContentPane()).setBorder(
+        BorderFactory.createEmptyBorder(10, 10, 10, 10)
+    );
+}
+// Método para configurar la apariencia de la ventana principal
+
+
 
     // ============================
     // Inicialización de componentes
     // ============================
-    private void inicializarComponentes() {
-        // Panel superior: Información de los personajes
-        JPanel panelInfo = new JPanel(new GridLayout(2, 2));
+   private void inicializarComponentes() {
+    // Panel superior con estilo
+    JPanel panelInfo = new JPanel(new GridLayout(2, 2, 8, 5));
+    panelInfo.setBackground(new Color(35, 35, 45));
+    panelInfo.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createLineBorder(new Color(180, 0, 0), 1),
+        BorderFactory.createEmptyBorder(8, 8, 8, 8)
+    ));
 
-        // Nombre y barra de vida del jugador
-        labelJugadorNombre = new JLabel(jugador.getNombre());
-        barraJugadorVida = new JProgressBar(0, jugador.getVidaMaxima());
-        barraJugadorVida.setValue(jugador.getVida());
-        barraJugadorVida.setStringPainted(true);
-        barraJugadorVida.setForeground(Color.GREEN);
+    // Nombre y barra de vida del jugador con estilo
+    labelJugadorNombre = new JLabel(jugador.getNombre());
+    labelJugadorNombre.setForeground(new Color(230, 230, 230));
+    labelJugadorNombre.setFont(new Font("Arial", Font.BOLD, 16));
+    
+    barraJugadorVida = new JProgressBar(0, jugador.getVidaMaxima());
+    barraJugadorVida.setValue(jugador.getVida());
+    barraJugadorVida.setStringPainted(true);
+    barraJugadorVida.setForeground(new Color(0, 170, 0));
+    barraJugadorVida.setBackground(new Color(50, 50, 60));
+    barraJugadorVida.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
 
-        // Nombre y barra de vida del enemigo
-        labelEnemigoNombre = new JLabel(enemigoActual.getNombre());
-        barraEnemigoVida = new JProgressBar(0, enemigoActual.getVidaMaxima());
-        barraEnemigoVida.setValue(enemigoActual.getVida());
-        barraEnemigoVida.setStringPainted(true);
-        barraEnemigoVida.setForeground(Color.RED);
+    // Nombre y barra de vida del enemigo con estilo
+    labelEnemigoNombre = new JLabel(enemigoActual.getNombre());
+    labelEnemigoNombre.setForeground(new Color(230, 230, 230));
+    labelEnemigoNombre.setFont(new Font("Arial", Font.BOLD, 16));
+    
+    barraEnemigoVida = new JProgressBar(0, enemigoActual.getVidaMaxima());
+    barraEnemigoVida.setValue(enemigoActual.getVida());
+    barraEnemigoVida.setStringPainted(true);
+    barraEnemigoVida.setForeground(new Color(180, 0, 0));
+    barraEnemigoVida.setBackground(new Color(50, 50, 60));
+    barraEnemigoVida.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
 
-        // Agregar componentes al panel
-        panelInfo.add(labelJugadorNombre);
-        panelInfo.add(labelEnemigoNombre);
-        panelInfo.add(barraJugadorVida);
-        panelInfo.add(barraEnemigoVida);
+    // Agregar componentes al panel
+    panelInfo.add(labelJugadorNombre);
+    panelInfo.add(labelEnemigoNombre);
+    panelInfo.add(barraJugadorVida);
+    panelInfo.add(barraEnemigoVida);
 
-        add(panelInfo, BorderLayout.NORTH);
+    add(panelInfo, BorderLayout.NORTH);
 
-        // Panel central: Área de mensajes
-        areaMensajes = new JTextArea();
-        areaMensajes.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(areaMensajes);
-        add(scrollPane, BorderLayout.CENTER);
+    // Panel central: Área de mensajes con estilo
+    areaMensajes = new JTextArea();
+    areaMensajes.setEditable(false);
+    areaMensajes.setBackground(new Color(40, 40, 50));
+    areaMensajes.setForeground(new Color(230, 230, 230));
+    areaMensajes.setFont(new Font("Consolas", Font.PLAIN, 14));
+    areaMensajes.setMargin(new Insets(10, 10, 10, 10));
+    
+    JScrollPane scrollPane = new JScrollPane(areaMensajes);
+    scrollPane.setBorder(BorderFactory.createLineBorder(new Color(180, 0, 0), 1));
+    add(scrollPane, BorderLayout.CENTER);
 
-        // Panel inferior: Botones de acción
-        JPanel panelBotones = new JPanel(new GridLayout(2, 5));
-        JButton btnAtacar = new JButton("Atacar");
-        JButton btnCurar = new JButton("Curarse");
-        JButton btnHabilidad = new JButton("Habilidad Especial");
-        JButton btnFatality = new JButton("Fatality");
-        JButton btnCombo = new JButton("Combo");// Botón Combo
-        JButton btnBolsa = new JButton("Ver Bolsa");
-                                                
-        btnCombo.setEnabled(false); // Deshabilitar el botón Combo al inicio
-        btnFatality.setEnabled(false); // Deshabilitar el botón Fatality al inicio
+    // Panel inferior: Botones de acción con estilo
+    JPanel panelBotones = new JPanel(new GridLayout(2, 3, 8, 8));
+    panelBotones.setBackground(new Color(35, 35, 45));
+    panelBotones.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createLineBorder(new Color(180, 0, 0), 1),
+        BorderFactory.createEmptyBorder(8, 8, 8, 8)
+    ));
+    
+    // Crear botones con estilo
+    JButton btnAtacar = crearBotonEstilizado("Atacar", new Color(170, 0, 0));
+    JButton btnCurar = crearBotonEstilizado("Curarse", new Color(0, 130, 0));
+    JButton btnHabilidad = crearBotonEstilizado("Habilidad Especial", new Color(0, 0, 150));
+    JButton btnFatality = crearBotonEstilizado("Fatality", new Color(100, 0, 0));
+    JButton btnCombo = crearBotonEstilizado("Combo", new Color(130, 0, 130));
+    JButton btnBolsa = crearBotonEstilizado("Ver Bolsa", new Color(150, 75, 0));
+    
+    // Desactivar botones inicialmente
+    btnCombo.setEnabled(false);
+    btnFatality.setEnabled(false);
 
-        panelBotones.add(btnAtacar);
-        panelBotones.add(btnCurar);
-        panelBotones.add(btnHabilidad);
-        panelBotones.add(btnFatality); // Agregar botón Fatality al panel
-        panelBotones.add(btnCombo); // Agregar botón Combo al panel
-        panelBotones.add(btnBolsa); // Botón de salir
-        add(panelBotones, BorderLayout.SOUTH);
+    // Agregar botones al panel
+    panelBotones.add(btnAtacar);
+    panelBotones.add(btnCurar);
+    panelBotones.add(btnHabilidad);
+    panelBotones.add(btnFatality);
+    panelBotones.add(btnCombo);
+    panelBotones.add(btnBolsa);
 
-        // Agregar listeners a los botones
-        agregarListeners(btnAtacar, btnCurar, btnHabilidad, btnFatality, btnCombo, btnBolsa);
-    }
+    add(panelBotones, BorderLayout.SOUTH);
+
+    // Agregar listeners a los botones
+    agregarListeners(btnAtacar, btnCurar, btnHabilidad, btnFatality, btnCombo, btnBolsa);
+}
+// Método para crear botones estilizados
+private JButton crearBotonEstilizado(String texto, Color colorFondo) {
+    JButton boton = new JButton(texto);
+    boton.setBackground(colorFondo);
+    boton.setForeground(Color.WHITE);
+    boton.setFont(new Font("Arial", Font.BOLD, 14));
+    boton.setFocusPainted(false);
+    boton.setBorderPainted(false);
+    boton.setOpaque(true);
+    
+    // Añadir efecto hover
+    boton.addMouseListener(new java.awt.event.MouseAdapter() {
+        public void mouseEntered(java.awt.event.MouseEvent evt) {
+            if (boton.isEnabled()) {
+                boton.setBackground(colorFondo.brighter());
+            }
+        }
+        
+        public void mouseExited(java.awt.event.MouseEvent evt) {
+            boton.setBackground(colorFondo);
+            if (!boton.isEnabled()) {
+                boton.setBackground(new Color(70, 70, 70));
+            }
+        }
+    });
+    
+    return boton;
+}
+
 
     private void agregarListeners(JButton btnAtacar, JButton btnCurar, JButton btnHabilidad, JButton btnFatality,
             JButton btnCombo, JButton btnBolsa) {
@@ -128,6 +201,7 @@ private Objetos gestorObjetos; // Instancia para gestionar los efectos de los ob
         btnBolsa.addActionListener(e -> mostrarBolsa()); // Mostrar bolsa de objetos
     }
 
+    
     // ============================
     // Métodos de lógica del juego
     // ============================
