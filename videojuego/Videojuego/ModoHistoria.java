@@ -111,7 +111,8 @@ public class ModoHistoria extends JFrame {
 
         JButton btnAtacar = crearBotonEstilizado("Atacar", new Color(170, 0, 0), "/Resources/Golpe.jpg", 64, 64);
         JButton btnCurar = crearBotonEstilizado("Curarse", new Color(0, 130, 0), "/Resources/Curacion.jpg", 64, 64);
-        JButton btnHabilidad = crearBotonEstilizado("Habilidad Especial", new Color(0, 0, 150), "/Resources/Habilidad.jpg", 64, 64);
+        JButton btnHabilidad = crearBotonEstilizado("Habilidad Especial", new Color(0, 0, 150),
+                "/Resources/Habilidad.jpg", 64, 64);
         JButton btnFatality = crearBotonEstilizado("Fatality", new Color(100, 0, 0), "/Resources/Fatality.jpg", 64, 64);
         JButton btnCombo = crearBotonEstilizado("Combo", new Color(130, 0, 130), "/Resources/Golpe.jpg", 64, 64);
         JButton btnBolsa = crearBotonEstilizado("Ver Bolsa", new Color(150, 75, 0), "/Resources/Golpe.jpg", 64, 64);
@@ -127,7 +128,8 @@ public class ModoHistoria extends JFrame {
         agregarListeners(btnAtacar, btnCurar, btnHabilidad, btnFatality, btnCombo, btnBolsa);
     }
 
-    private JButton crearBotonEstilizado(String texto, Color colorFondo, String rutaImagen, int anchoImagen, int altoImagen) {
+    private JButton crearBotonEstilizado(String texto, Color colorFondo, String rutaImagen, int anchoImagen,
+            int altoImagen) {
         JButton boton = new JButton(texto);
         boton.setBackground(colorFondo);
         boton.setForeground(Color.WHITE);
@@ -138,7 +140,8 @@ public class ModoHistoria extends JFrame {
 
         if (rutaImagen != null) {
             ImageIcon iconoOriginal = new ImageIcon(getClass().getResource(rutaImagen));
-            Image imagenRedimensionada = iconoOriginal.getImage().getScaledInstance(anchoImagen, altoImagen, Image.SCALE_SMOOTH);
+            Image imagenRedimensionada = iconoOriginal.getImage().getScaledInstance(anchoImagen, altoImagen,
+                    Image.SCALE_SMOOTH);
             boton.setIcon(new ImageIcon(imagenRedimensionada));
             boton.setHorizontalTextPosition(SwingConstants.CENTER);
             boton.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -148,7 +151,8 @@ public class ModoHistoria extends JFrame {
         return boton;
     }
 
-    private void agregarListeners(JButton btnAtacar, JButton btnCurar, JButton btnHabilidad, JButton btnFatality, JButton btnCombo, JButton btnBolsa) {
+    private void agregarListeners(JButton btnAtacar, JButton btnCurar, JButton btnHabilidad, JButton btnFatality,
+            JButton btnCombo, JButton btnBolsa) {
         btnAtacar.addActionListener(e -> turnoJugador("atacar"));
         btnCurar.addActionListener(e -> turnoJugador("curar"));
         btnHabilidad.addActionListener(e -> turnoJugador("habilidad"));

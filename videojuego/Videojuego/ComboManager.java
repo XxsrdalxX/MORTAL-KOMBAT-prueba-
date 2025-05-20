@@ -29,68 +29,89 @@ public class ComboManager {
     }
 
     // Muestra una ventana para que el usuario ingrese un combo
-    public void mostrarVentanaCombo() {
-        String comboEsperado = obtenerComboAleatorio(); // Selecciona un combo aleatorio
+   public void mostrarVentanaCombo() {
+    String comboEsperado = obtenerComboAleatorio(); // Selecciona un combo aleatorio
 
-        JDialog dialogoCombo = new JDialog((JFrame) SwingUtilities.getWindowAncestor(areaMensajes),
-                "¡Ingresa el Combo!", true);
-        dialogoCombo.setSize(800, 400);
-        dialogoCombo.setLayout(new BorderLayout());
-        dialogoCombo.setLocationRelativeTo(null);
+    JDialog dialogoCombo = new JDialog((JFrame) SwingUtilities.getWindowAncestor(areaMensajes),
+            "¡Ingresa el Combo!", true);
+    dialogoCombo.setSize(800, 400);
+    dialogoCombo.setLayout(new BorderLayout());
+    dialogoCombo.setLocationRelativeTo(null);
 
-        // Etiqueta con instrucciones
-        JLabel labelInstrucciones = new JLabel("Ingresa el combo: " + comboEsperado, SwingConstants.CENTER);
-        labelInstrucciones.setFont(new Font("Arial", Font.BOLD, 44)); // Cambiar tamaño del texto
-        dialogoCombo.add(labelInstrucciones, BorderLayout.NORTH);
+    // Panel principal con fondo oscuro y borde rojo
+    JPanel panelPrincipal = new JPanel(new BorderLayout());
+    panelPrincipal.setBackground(new Color(35, 35, 45));
+    panelPrincipal.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createLineBorder(new Color(180, 0, 0), 4),
+        BorderFactory.createEmptyBorder(20, 20, 20, 20)
+    ));
 
-        // Campo de texto para ingresar el combo
-        JTextField campoCombo = new JTextField();
-        campoCombo.setHorizontalAlignment(JTextField.CENTER); // Centrar el texto ingresado
-        campoCombo.setFont(new Font("Arial", Font.BOLD, 44)); // Cambiar tamaño del texto ingresado
-        dialogoCombo.add(campoCombo, BorderLayout.CENTER);
+    // Etiqueta con instrucciones
+    JLabel labelInstrucciones = new JLabel("Ingresa el combo: " + comboEsperado, SwingConstants.CENTER);
+    labelInstrucciones.setFont(new Font("Arial", Font.BOLD, 44));
+    labelInstrucciones.setForeground(new Color(255, 215, 0)); // Amarillo Mortal Kombat
+    panelPrincipal.add(labelInstrucciones, BorderLayout.NORTH);
 
-        // Panel inferior con temporizador y botón confirmar
-        JPanel panelInferior = new JPanel(new BorderLayout());
+    // Campo de texto para ingresar el combo
+    JTextField campoCombo = new JTextField();
+    campoCombo.setHorizontalAlignment(JTextField.CENTER);
+    campoCombo.setFont(new Font("Arial", Font.BOLD, 44));
+    campoCombo.setBackground(new Color(50, 50, 60));
+    campoCombo.setForeground(Color.WHITE);
+    campoCombo.setCaretColor(Color.YELLOW);
+    campoCombo.setBorder(BorderFactory.createLineBorder(new Color(180, 0, 0), 2));
+    panelPrincipal.add(campoCombo, BorderLayout.CENTER);
 
-        // Etiqueta para mostrar el tiempo restante
-        JLabel labelTemporizador = new JLabel("Tiempo restante: 10 segundos", SwingConstants.CENTER);
-        labelTemporizador.setFont(new Font("Arial", Font.BOLD, 44));
-        panelInferior.add(labelTemporizador, BorderLayout.NORTH);
+    // Panel inferior con temporizador y botón confirmar
+    JPanel panelInferior = new JPanel(new BorderLayout());
+    panelInferior.setBackground(new Color(35, 35, 45));
 
-        // Botón para confirmar el combo
-        JButton btnConfirmar = new JButton("Confirmar");
-        panelInferior.add(btnConfirmar, BorderLayout.SOUTH);
+    // Etiqueta para mostrar el tiempo restante
+    JLabel labelTemporizador = new JLabel("Tiempo restante: 10 segundos", SwingConstants.CENTER);
+    labelTemporizador.setFont(new Font("Arial", Font.BOLD, 36));
+    labelTemporizador.setForeground(new Color(255, 69, 0)); // Rojo fuego
+    panelInferior.add(labelTemporizador, BorderLayout.NORTH);
 
-        dialogoCombo.add(panelInferior, BorderLayout.SOUTH);
+    // Botón para confirmar el combo
+    JButton btnConfirmar = new JButton("Confirmar");
+    btnConfirmar.setBackground(new Color(180, 0, 0));
+    btnConfirmar.setForeground(Color.WHITE);
+    btnConfirmar.setFont(new Font("Arial", Font.BOLD, 28));
+    btnConfirmar.setFocusPainted(false);
+    btnConfirmar.setBorder(BorderFactory.createLineBorder(new Color(255, 215, 0), 2));
+    panelInferior.add(btnConfirmar, BorderLayout.SOUTH);
 
-        // Temporizador para actualizar el tiempo restante
-        final int[] tiempoRestante = { 10 }; // Tiempo inicial en segundos
-        Timer temporizador = new Timer(1000, e -> {
-            tiempoRestante[0]--;
-            labelTemporizador.setText("Tiempo restante: " + tiempoRestante[0] + " segundos");
-            if (tiempoRestante[0] <= 0) {
-                ((Timer) e.getSource()).stop(); // Detener el temporizador
-                dialogoCombo.dispose(); // Cerrar el diálogo
-                areaMensajes.append("Combo fallido: No ingresaste el combo a tiempo.\n");
-            }
-        });
-        temporizador.start();
+    panelPrincipal.add(panelInferior, BorderLayout.SOUTH);
+    dialogoCombo.setContentPane(panelPrincipal);
 
-        // Acción del botón confirmar
-        btnConfirmar.addActionListener(e -> {
-            String comboIngresado = campoCombo.getText();
-            if (comboIngresado.equals(comboEsperado)) {
-                areaMensajes.append("¡Combo exitoso! Realizaste el combo: " + comboEsperado + "\n");
-                ejecutarCombo(comboEsperado);
-            } else {
-                areaMensajes.append("Combo fallido: El combo ingresado es incorrecto.\n");
-            }
-            temporizador.stop(); // Detener el temporizador
-            dialogoCombo.dispose(); // Cerrar el diálogo
-        });
+    // Temporizador para actualizar el tiempo restante
+    final int[] tiempoRestante = { 10 }; // Tiempo inicial en segundos
+    Timer temporizador = new Timer(1000, e -> {
+        tiempoRestante[0]--;
+        labelTemporizador.setText("Tiempo restante: " + tiempoRestante[0] + " segundos");
+        if (tiempoRestante[0] <= 0) {
+            ((Timer) e.getSource()).stop();
+            dialogoCombo.dispose();
+            areaMensajes.append("Combo fallido: No ingresaste el combo a tiempo.\n");
+        }
+    });
+    temporizador.start();
 
-        dialogoCombo.setVisible(true);
-    }
+    // Acción del botón confirmar
+    btnConfirmar.addActionListener(e -> {
+        String comboIngresado = campoCombo.getText();
+        if (comboIngresado.equals(comboEsperado)) {
+            areaMensajes.append("¡Combo exitoso! Realizaste el combo: " + comboEsperado + "\n");
+            ejecutarCombo(comboEsperado);
+        } else {
+            areaMensajes.append("Combo fallido: El combo ingresado es incorrecto.\n");
+        }
+        temporizador.stop();
+        dialogoCombo.dispose();
+    });
+
+    dialogoCombo.setVisible(true);
+}   
 
     // Ejecuta el efecto del combo
     private void ejecutarCombo(String combo) {

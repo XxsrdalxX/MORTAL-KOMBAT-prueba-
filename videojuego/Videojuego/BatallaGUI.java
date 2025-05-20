@@ -28,117 +28,123 @@ public class BatallaGUI extends JFrame {
 
     // Método principal para inicializar la batalla
     private void iniciarBatalla() {
-        setTitle("Batalla Mortal Kombat");
-        setSize(1000, 600);
+        setTitle("☠️ Batalla Mortal Kombat ☠️");
+        setSize(900, 550);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(10, 10));
+        getContentPane().setBackground(new Color(25, 25, 30));
+        ((JPanel) getContentPane()).setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Panel superior: Información de los personajes y barras de vida
-        JPanel panelInfo = new JPanel(new GridLayout(2, 2));
-        inicializarBarrasDeVida(panelInfo);
-        add(panelInfo, BorderLayout.NORTH);
+        JPanel panelInfo = new JPanel(new GridLayout(2, 2, 8, 5));
+        panelInfo.setBackground(new Color(35, 35, 45));
+        panelInfo.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(180, 0, 0), 1),
+            BorderFactory.createEmptyBorder(8, 8, 8, 8)
+        ));
 
-        // Panel central: Área de mensajes
-        inicializarAreaMensajes();
+        // Etiquetas y barras de vida con estilo
+        labelJugadorNombre = new JLabel("Jugador: " + jugador.getNombre());
+        labelJugadorNombre.setForeground(new Color(230, 230, 230));
+        labelJugadorNombre.setFont(new Font("Arial", Font.BOLD, 16));
 
-        // Panel inferior: Botones de acción
-        inicializarBotones();
-    }
-
-    // Inicializa las barras de vida de los personajes
-    private void inicializarBarrasDeVida(JPanel panelInfo) {
-        // Barra de vida del jugador
         barraJugadorVida = new JProgressBar(0, jugador.getVidaMaxima());
         barraJugadorVida.setValue(jugador.getVida());
         barraJugadorVida.setStringPainted(true);
-        barraJugadorVida.setForeground(Color.GREEN);
-        panelInfo.add(new JLabel("Jugador: " + jugador.getNombre()));
-        panelInfo.add(barraJugadorVida);
+        barraJugadorVida.setForeground(new Color(0, 170, 0));
+        barraJugadorVida.setBackground(new Color(50, 50, 60));
+        barraJugadorVida.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
 
-        // Barra de vida del enemigo
+        labelEnemigoNombre = new JLabel("Enemigo: " + enemigo.getNombre());
+        labelEnemigoNombre.setForeground(new Color(230, 230, 230));
+        labelEnemigoNombre.setFont(new Font("Arial", Font.BOLD, 16));
+
         barraEnemigoVida = new JProgressBar(0, enemigo.getVidaMaxima());
         barraEnemigoVida.setValue(enemigo.getVida());
         barraEnemigoVida.setStringPainted(true);
-        barraEnemigoVida.setForeground(Color.RED);
-        panelInfo.add(new JLabel("Enemigo: " + enemigo.getNombre()));
-        panelInfo.add(barraEnemigoVida);
-    }
+        barraEnemigoVida.setForeground(new Color(180, 0, 0));
+        barraEnemigoVida.setBackground(new Color(50, 50, 60));
+        barraEnemigoVida.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
 
-    // Inicializa el área de mensajes
-    private void inicializarAreaMensajes() {
+        panelInfo.add(labelJugadorNombre);
+        panelInfo.add(labelEnemigoNombre);
+        panelInfo.add(barraJugadorVida);
+        panelInfo.add(barraEnemigoVida);
+        add(panelInfo, BorderLayout.NORTH);
+
+        // Panel central: Área de mensajes
         areaMensajes = new JTextArea();
         areaMensajes.setEditable(false);
-        areaMensajes.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        areaMensajes.putClientProperty("Nimbus.Overrides", new UIDefaults() {
-            {
-                put("TextArea.lineSpacing", 0.5); // Ajustar el espaciado entre líneas
-            }
-        });
+        areaMensajes.setBackground(new Color(40, 40, 50));
+        areaMensajes.setForeground(new Color(230, 230, 230));
+        areaMensajes.setFont(new Font("Consolas", Font.PLAIN, 14));
+        areaMensajes.setMargin(new Insets(10, 10, 10, 10));
         JScrollPane scrollPane = new JScrollPane(areaMensajes);
+        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(180, 0, 0), 1));
         add(scrollPane, BorderLayout.CENTER);
-    }
 
-    // Inicializa los botones de acción
-    private void inicializarBotones() {
-        JPanel panelBotones = new JPanel(new GridLayout(2, 3));
-        JButton btnAtacar = new JButton("Atacar");
-        JButton btnCurar = new JButton("Curarse");
-        JButton btnHabilidad = new JButton("Habilidad Especial");
-        JButton btnCombo = new JButton("Combo");
-        JButton btnFatality = new JButton("Fatality");
-        JButton btnOBJ = new JButton("Objetos");
+        // Panel inferior: Botones de acción con colores
+        JPanel panelBotones = new JPanel(new GridLayout(2, 3, 10, 10));
+        panelBotones.setBackground(new Color(35, 35, 45));
+        panelBotones.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(180, 0, 0), 1),
+            BorderFactory.createEmptyBorder(8, 8, 8, 8)
+        ));
 
-        // Agregar botones al panel
+        JButton btnAtacar = crearBotonEstilizado("Atacar", new Color(170, 0, 0), "/Resources/Golpe.jpg", 48, 48);
+        JButton btnCurar = crearBotonEstilizado("Curarse", new Color(0, 130, 0), "/Resources/Curacion.jpg", 48, 48);
+        JButton btnHabilidad = crearBotonEstilizado("Habilidad Especial", new Color(0, 0, 150), "/Resources/Habilidad.jpg", 48, 48);
+        JButton btnCombo = crearBotonEstilizado("Combo", new Color(130, 0, 130), "/Resources/Golpe.jpg", 48, 48);
+        JButton btnFatality = crearBotonEstilizado("Fatality", new Color(100, 0, 0), "/Resources/Fatality.jpg", 48, 48);
+       
+
         panelBotones.add(btnAtacar);
         panelBotones.add(btnCurar);
         panelBotones.add(btnHabilidad);
         panelBotones.add(btnCombo);
         panelBotones.add(btnFatality);
-        panelBotones.add(btnOBJ);
+      
         add(panelBotones, BorderLayout.SOUTH);
-
-        // Configurar imágenes de los botones
-        configurarImagenBoton(btnAtacar, "/Resources/Golpe.jpg");
-        configurarImagenBoton(btnHabilidad, "/Resources/Habilidad.jpg");
 
         // Deshabilitar botones al inicio
         btnCombo.setEnabled(false);
         btnFatality.setEnabled(false);
 
         // Agregar listeners a los botones
-        agregarListeners(btnAtacar, btnCurar, btnHabilidad, btnFatality, btnCombo, btnOBJ);
+        agregarListeners(btnAtacar, btnCurar, btnHabilidad, btnFatality, btnCombo );
     }
 
-    // Configura una imagen para un botón
-    private void configurarImagenBoton(JButton boton, String rutaImagen) {
-        ImageIcon icono = new ImageIcon(getClass().getResource(rutaImagen));
-        Image imagenEscalada = icono.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
-        boton.setIcon(new ImageIcon(imagenEscalada));
+    // Crea un botón estilizado con color e imagen
+    private JButton crearBotonEstilizado(String texto, Color colorFondo, String rutaImagen, int anchoImagen, int altoImagen) {
+        JButton boton = new JButton(texto);
+        boton.setBackground(colorFondo);
+        boton.setForeground(Color.WHITE);
+        boton.setFont(new Font("Arial", Font.BOLD, 14));
+        boton.setFocusPainted(false);
+        boton.setBorderPainted(false);
+        boton.setOpaque(true);
 
-        ImageIcon iconoHover = new ImageIcon(getClass().getResource(rutaImagen));
-        Image imagenHover = iconoHover.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
-        boton.setRolloverIcon(new ImageIcon(imagenHover)); // Cambia el icono al pasar el mouse
+        if (rutaImagen != null) {
+            ImageIcon iconoOriginal = new ImageIcon(getClass().getResource(rutaImagen));
+            Image imagenRedimensionada = iconoOriginal.getImage().getScaledInstance(anchoImagen, altoImagen, Image.SCALE_SMOOTH);
+            boton.setIcon(new ImageIcon(imagenRedimensionada));
+            boton.setHorizontalTextPosition(SwingConstants.CENTER);
+            boton.setVerticalTextPosition(SwingConstants.BOTTOM);
+        }
 
+        boton.setPreferredSize(new Dimension(100, 100));
+        return boton;
     }
 
     // Agrega los listeners a los botones
     private void agregarListeners(JButton btnAtacar, JButton btnCurar, JButton btnHabilidad, JButton btnFatality,
-            JButton btnCombo, JButton btnSalir) {
-        // Listener para el botón "Salir"
-        btnSalir.addActionListener(e -> {
-            int respuesta = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que quieres salir?", "Salir",
-                    JOptionPane.YES_NO_OPTION);
-            if (respuesta == JOptionPane.YES_OPTION) {
-                System.exit(0); // Cerrar el programa
-            }
-        });
-
-        // Listeners para las acciones del jugador
+            JButton btnCombo ) {
         btnAtacar.addActionListener(e -> turnoJugador("atacar"));
         btnCurar.addActionListener(e -> turnoJugador("curar"));
         btnHabilidad.addActionListener(e -> turnoJugador("habilidad"));
         btnFatality.addActionListener(e -> realizarFatality(btnFatality));
         btnCombo.addActionListener(e -> usarCombo(btnCombo));
+        
     }
 
     // Métodos de acción del jugador
@@ -219,23 +225,23 @@ public class BatallaGUI extends JFrame {
         barraEnemigoVida.setValue(enemigo.getVida());
     }
 
-    private void verificarActivacionCombo() {
-        if (contadorTurnos >= 3) {
-            JButton btnCombo = (JButton) ((JPanel) getContentPane().getComponent(2)).getComponent(3);
-            btnCombo.setEnabled(true);
-            areaMensajes.append("¡El botón de Combo está ahora disponible!\n");
-        }
+  private void verificarActivacionCombo() {
+    if (contadorTurnos >= 3) {
+        JButton btnCombo = (JButton) ((JPanel) getContentPane().getComponent(2)).getComponent(3);
+        btnCombo.setEnabled(true);
+        areaMensajes.append("¡El botón de Combo está ahora disponible!\n");
     }
+}
 
-    private void usarCombo(JButton btnCombo) {
-        ComboManager comboManager = new ComboManager(areaMensajes, jugador, enemigo);
-        comboManager.mostrarVentanaCombo();
+  private void usarCombo(JButton btnCombo) {
+    ComboManager comboManager = new ComboManager(areaMensajes, jugador, enemigo);
+    comboManager.mostrarVentanaCombo();
 
-        btnCombo.setEnabled(false);
-        contadorTurnos = 0;
-        actualizarBarrasDeVida();
-        verificarEstado();
-    }
+    btnCombo.setEnabled(false);
+    contadorTurnos = 0;
+    actualizarBarrasDeVida();
+    verificarEstado();
+}
 
     private void realizarFatality(JButton btnFatality) {
         if (enemigo.getVida() <= enemigo.getVidaMaxima() * 0.3) {
